@@ -1,0 +1,336 @@
+interface GigabitEthernet1/0/10
+ description USER-EDGE | 802.1X + MAB (IBNS2)
+ switchport mode access
+ switchport access vlan 20
+ switchport voice vlan 120
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip access-group EDGE-IN in
+ authentication host-mode multi-auth
+ authentication order mab dot1x
+ authentication priority dot1x mab
+ authentication port-control auto
+ mab
+ dot1x pae authenticator
+ access-session port-control auto
+ access-session closed
+ access-session control-direction in
+ access-session host-mode multi-auth
+ service-policy type control subscriber DOT1X-DEFAULT
+!
+interface GigabitEthernet1/0/10.25
+ description USER-EDGE | 802.1X + MAB (IBNS2)
+ switchport mode access
+ switchport access vlan 20
+ switchport voice vlan 120
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip access-group EDGE-IN in
+ authentication host-mode multi-auth
+ authentication order mab dot1x
+ authentication priority dot1x mab
+ authentication port-control auto
+ mab
+ dot1x pae authenticator
+ access-session port-control auto
+ access-session closed
+ access-session control-direction in
+ access-session host-mode multi-auth
+ service-policy type control subscriber DOT1X-DEFAULT
+!
+
+int gi1/0/11
+ description Printer / MAB only
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ authentication order mab
+ authentication port-control auto
+ mab
+ access-session port-control auto
+!
+
+interface TenGigabitEthernet1/1/1
+ description Uplink-to-DIST | dot1q trunk
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,120,200,999
+ switchport trunk native vlan 999
+ switchport nonegotiate
+ ip access-group TRUNK-IN in
+ ipv6 traffic-filter V6-TRUNK-IN in
+!
+
+int te1/1/2
+ description Uplink-to-CORE
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan add 300,301,302
+ storm-control broadcast level 1.00
+ storm-control multicast level 1.00
+ spanning-tree guard root
+!
+
+interface FortyGigabitEthernet1/0/1
+ description L3 P2P to CORE-RTR
+ no switchport
+ ip address 10.255.0.2 255.255.255.252
+ ip ospf 50 area 0
+ ip ospf network point-to-point
+ ip access-group INFRA-IN in
+ ip mtu 1500
+!
+
+int fo1/0/2
+ description L3 Transit to WAN-EDGE
+ no switchport
+ ip address 172.16.10.2 255.255.255.252
+ ip access-group WAN-IN in
+!
+
+interface HundredGigabitEthernet1/0/49
+ description DC-AGG-UPLINK
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50,999
+ switchport trunk native vlan 999
+!
+
+interface Vlan20
+ description Users VLAN SVI
+ ip address 10.20.0.1 255.255.255.0
+ ip helper-address 10.10.10.10
+ no ip redirects
+ no ip proxy-arp
+ ip access-group USERS-IN in
+!
+
+interface vlan120
+ description Voice SVI
+ ip address 10.120.0.1 255.255.255.0
+ ip helper-address 10.10.10.10
+ no ip redirects
+ no ip proxy-arp
+!
+
+interface Loopback0
+ description Router-ID / Mgmt source
+ ip address 10.255.255.1 255.255.255.255
+ ip access-group LOOPBACK-IN in
+!
+
+!!!!!!!!!!!!!!!!!! Port Channels
+interface Port-channel10
+ description LACP-TRUNK to CORE
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,120,200,999
+!
+interface TenGigabitEthernet1/1/3
+ description LACP member to CORE (1/2)
+ switchport mode trunk
+ channel-group 10 mode active
+!
+interface Te1/1/4
+ description LACP member to CORE (2/2)
+ switchport mode trunk
+ channel-group 10 mode active
+!
+
+interface port-channel20
+ description L3 LACP Transit to Distribution
+ no switchport
+ ip address 10.255.20.1 255.255.255.252
+ ip ospf 50 area 0
+ ip access-group INFRA-IN in
+!
+interface GigabitEthernet1/0/47
+ description L3 Po20 member
+ no switchport
+ channel-group 20 mode active
+!
+interface gi1/0/48
+ description L3 Po20 member
+ no switchport
+ channel-group 20 mode active
+!
+!!!!!!!!!!!!!!!!!!!!!!!! Tunnels
+interface Tunnel0
+ description GRE to RemoteSite-01
+ ip address 10.200.0.1 255.255.255.252
+ tunnel source Loopback0
+ tunnel destination 203.0.113.10
+ ip tcp adjust-mss 1360
+ ip access-group TUNNEL-IN in
+!
+
+int tun10
+ description GRE to RemoteSite-02
+ ip address 10.200.0.5 255.255.255.252
+ tunnel source 10.255.255.1
+ tunnel destination 198.51.100.22
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+!
+
+interface Tunnel0
+ description GRE to RemoteSite-01
+ ip address 10.200.0.1 255.255.255.252
+ tunnel source lo0
+ tunnel destination 203.0.113.10
+ ip tcp adjust-mss 1360
+ ip access-group TUNNEL-IN in
+!
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+interface Gi1/0/20
+ description Camera
+ switchport mode access
+ switchport access vlan 40
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+
+interface GigabitEthernet1/0/30
+ description Wireless AP
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 200,201,202,999
+ spanning-tree portfast trunk
+ authentication port-control auto
+ mab
+ dot1x pae authenticator
+ access-session port-control auto
+ service-policy type control subscriber DOT1X-DEFAULT
+!
+ip access-list extended EDGE-IN
+ remark Basic edge inbound filter example
+ permit udp any any eq bootpc
+ permit udp any any eq bootps
+ permit udp any host 10.10.10.10 eq domain
+ deny   ip any 10.0.0.0 0.255.255.255
+ permit ip any any
+
+ip access-list extended INFRA-IN
+ remark Transit protection example
+ permit ospf any any
+ permit icmp any any
+ deny   ip any 192.168.0.0 0.0.255.255
+ permit ip any any
+!
+
+ipv6 access-list V6-TRUNK-IN
+ remark Minimal v6 example
+ permit icmp any any
+ permit ipv6 any any
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! SUB INTERFACES
+interface GigabitEthernet0/0
+ description To-L2-SWITCH trunk
+ no ip address
+ no shutdown
+!
+interface GigabitEthernet0/0.10
+ description VLAN10 Users
+ encapsulation dot1Q 10
+ ip address 10.10.10.1 255.255.255.0
+ ip access-group USERS-IN in
+!
+interface Gi0/0.20
+ description VLAN20 Printers
+ encapsulation dot1Q 20
+ ip address 10.10.20.1 255.255.255.0
+!
+interface gi0/0.999
+ description Native VLAN (example)
+ encapsulation dot1Q 999 native
+ ip address 10.10.99.1 255.255.255.0
+ ip access-group NATIVE-IN in
+!
+interface TenGigabitEthernet1/1/1
+ description Trunk to DC switch
+ no ip address
+ no shutdown
+!
+interface Te1/1/1.100
+ description VRF MGMT - VLAN100
+ encapsulation dot1Q 100
+ vrf forwarding MGMT
+ ip address 172.20.100.2 255.255.255.0
+ ip access-group MGMT-IN in
+!
+interface TenGigabitEthernet1/1/1.200
+ description VRF PROD - VLAN200
+ encapsulation dot1Q 200
+ vrf forwarding PROD
+ ip address 10.200.0.2 255.255.255.0
+!
+interface Te0/0/0
+ description Trunk to upstream router/switch
+ no ip address
+ no shutdown
+!
+interface Te0/0/0.50
+ description Transit VLAN50 to CORE
+ encapsulation dot1Q 50
+ ip address 10.255.50.2 255.255.255.252
+ ip ospf 50 area 0
+ ip ospf network point-to-point
+ ip access-group INFRA-IN in
+!
+interface Port-channel30
+ description LACP trunk carrying routed VLANs (router-on-a-stick over Po)
+ no ip address
+ no shutdown
+!
+interface port-channel30.10
+ description VLAN10 over Po30
+ encapsulation dot1Q 10
+ ip address 10.30.10.1 255.255.255.0
+!
+interface Po30.20
+ description VLAN20 over Po30
+ encapsulation dot1Q 20
+ ip address 10.30.20.1 255.255.255.0
+ ip access-group USERS-IN in
+!
+interface Port-channel30.999
+ description Native over Po30
+ encapsulation dot1Q 999 native
+ ip address 10.30.99.1 255.255.255.0
+!
+interface Te1/1/3
+ description Po30 member 1
+ channel-group 30 mode active
+!
+interface TenGigabitEthernet1/1/4
+ description Po30 member 2
+ channel-group 30 mode active
+!
+interface Gi0/1
+ description Provider handoff
+ no ip address
+!
+interface Gi0/1.200
+ description Customer VLAN200 inside S-Tag 3000
+ encapsulation dot1Q 3000 second-dot1q 200
+ ip address 192.0.2.2 255.255.255.252
+ ip access-group WAN-IN in
+!
+interface TenGigabitEthernet0/2/0
+ description DC leaf handoff (dot1q trunk)
+ no ip address
+!
+interface TenGigabitEthernet0/2/0.310
+ description PROD VRF - App segment
+ encapsulation dot1Q 310
+ vrf forwarding PROD
+ ip address 10.31.0.1 255.255.255.0
+!
+interface Te0/2/0.311
+ description PROD VRF - DB segment
+ encapsulation dot1Q 311
+ vrf forwarding PROD
+ ip address 10.31.1.1 255.255.255.0
+ ip access-group PROD-DB-IN in
+!

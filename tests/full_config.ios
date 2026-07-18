@@ -1,0 +1,420 @@
+!
+version 17.9
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+service tcp-keepalives-in
+service tcp-keepalives-out
+service sequence-numbers
+service call-home
+no service pad
+!
+hostname DIST-01
+!
+boot-start-marker
+boot system flash:cat9k_iosxe.17.09.05.SPA.bin
+boot-end-marker
+!
+logging buffered 64000 informational
+logging console warnings
+logging monitor informational
+logging host 10.10.99.50 transport udp port 514
+logging source-interface Vlan99
+!
+no ip domain-lookup
+ip domain name example.local
+ip name-server 10.10.99.10 10.10.99.11
+!
+!
+! TODO should be in routing
+vrf definition MGMT
+ rd 65000:99
+ address-family ipv4
+ exit-address-family
+!
+!
+crypto key generate rsa modulus 2048
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 3
+!
+banner login ^
+************************************************************************
+*                                                                      *
+*  WARNING: This system is for authorized users only.                  *
+*                                                                      *
+*  Unauthorized access is prohibited and may be monitored, recorded,   *
+*  and subject to disciplinary action and criminal prosecution.        *
+*                                                                      *
+************************************************************************
+^
+
+banner exec %
+You are connected to the network infrastructure.
+Configuration changes must be authorized and documented.
+Type "exit" to end this session.
+%
+
+banner motd @
+***********************************************************************
+*                Welcome to the Cisco IOS XE Lab                      *
+*                                                                     *
+*   This device is used for development and testing of automation,    *
+*   PKI, 802.1X, Ansible, and network infrastructure configurations.  *
+*                                                                     *
+*   Save your work before disconnecting.                              *
+***********************************************************************
+@
+!
+archive
+ path flash:archive/$h-$t
+ write-memory
+ time-period 1440
+!
+!
+! TODO access control or policy enforcement?
+username netadmin privilege 15 secret 9 $9$EXAMPLE_HASH_REDACTED
+username opsuser privilege 5 secret 9 $9$EXAMPLE_HASH_REDACTED
+!
+!
+aaa new-model
+!
+radius server ISE-PRIMARY
+ address ipv4 10.10.100.10 auth-port 1812 acct-port 1813
+ key 7 045802150C2E
+ timeout 5
+ retransmit 3
+ automate-tester username radius-test probe-on
+!
+radius server ISE-SECONDARY
+ address ipv4 10.10.100.11
+ key 0 MySecretKey
+ timeout 5
+ retransmit 3
+!
+
+aaa authentication login default group ISE local
+aaa authentication enable default group ISE enable
+!
+aaa authorization exec default group ISE local if-authenticated
+aaa authorization commands 15 default group ISE local
+aaa authorization network default group ISE
+!
+aaa accounting exec default start-stop group ISE
+aaa accounting commands 15 default start-stop group ISE
+aaa accounting network default start-stop group ISE
+!
+radius-server attribute 6 on-for-login-auth
+radius-server attribute 8 include-in-access-req
+radius-server attribute 31 mac format ietf upper-case
+radius-server attribute 32 include-in-access-req format ietf
+radius-server dead-criteria time 10 tries 3
+radius-server deadtime 15
+radius-server load-balance method least-outstanding
+radius-server vsa send accounting
+radius-server vsa send authentication
+!
+ip radius source-interface Loopback0
+aaa group server radius ISE
+ server name ISE-PRIMARY
+ server name ISE-SECONDARY
+ ip radius source-interface Loopback0
+ deadtime 15
+!
+aaa group server tacacs+ TACACS-GRP
+ server name TACACS1
+ server name TACACS2
+ ip tacacs source-interface Vlan99
+!
+tacacs server TACACS1
+ address ipv4 10.10.99.21
+ key 7 05080F1C2243
+ timeout 5
+!
+tacacs server TACACS2
+ address ipv4 10.10.99.22
+ key 7 05080F1C2243
+ timeout 5
+!
+aaa authentication login default group TACACS-GRP local
+aaa authentication enable default group TACACS-GRP enable
+aaa authorization exec default group TACACS-GRP local
+aaa authorization commands 15 default group TACACS-GRP local
+aaa accounting exec default start-stop group TACACS-GRP
+aaa accounting commands 15 default start-stop group TACACS-GRP
+!
+enable secret 9 $9$EXAMPLE_HASH_REDACTED
+!
+!
+clock timezone GMT 0 0
+!
+!
+ip routing
+ip cef
+!
+!
+ip access-list standard VTY_MGMT_ONLY
+ remark Allow SSH to VTY only from management subnet
+ permit 10.10.99.0 0.0.0.255
+ deny   any log
+!
+ip access-list extended MGMT_IN
+ remark Permit mgmt traffic into the switch
+ permit tcp 10.10.99.0 0.0.0.255 host 10.10.99.2 eq 22
+ permit udp 10.10.99.0 0.0.0.255 host 10.10.99.2 eq snmp
+ permit udp 10.10.99.0 0.0.0.255 host 10.10.99.2 eq ntp
+ permit udp 10.10.99.0 0.0.0.255 host 10.10.99.2 eq 514
+ deny   ip any any log
+!
+ip access-list extended USER_VLAN10_IN
+ remark Basic edge policy example for user VLAN
+ permit udp any any eq domain
+ permit tcp any any eq www
+ permit tcp any any eq 443
+ permit icmp any any echo
+ deny   ip any 10.10.99.0 0.0.0.255 log
+ permit ip any any
+!
+!
+! TODO should go in routing
+ip prefix-list PL-OSPF-FILTER seq 10 permit 10.10.0.0/16 le 32
+ip prefix-list PL-OSPF-FILTER seq 20 permit 172.16.0.0/16 le 32
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 10,20,30,99 priority 24576
+spanning-tree portfast default
+spanning-tree bpduguard default
+!
+!
+errdisable recovery cause bpduguard
+errdisable recovery interval 300
+!
+!
+vlan 10
+ name USERS
+vlan 20
+ name VOICE
+vlan 30
+ name SERVERS
+vlan 99
+ name MGMT
+!
+!
+interface Loopback0
+ description Router-ID / Stable source
+ ip address 10.10.255.1 255.255.255.255
+!
+interface Vlan10
+ description USERS_SVI
+ ip address 10.10.10.1 255.255.255.0
+ ip access-group USER_VLAN10_IN in
+ ip helper-address 10.10.99.100
+ no shutdown
+!
+interface Vlan20
+ description VOICE_SVI
+ ip address 10.10.20.1 255.255.255.0
+ ip helper-address 10.10.99.100
+ no shutdown
+!
+interface Vlan30
+ description SERVERS_SVI
+ ip address 10.10.30.1 255.255.255.0
+ no shutdown
+!
+interface Vlan99
+ description MGMT_SVI (in-band mgmt)
+ vrf forwarding MGMT
+ ip address 10.10.99.2 255.255.255.0
+ ip access-group MGMT_IN in
+ shutdown
+!
+!
+interface Port-channel10
+ description L3_Po_to_CORE-PAIR
+ no switchport
+ ip address 172.16.0.2 255.255.255.252
+ ip ospf 10 area 0
+ ip flow monitor NETFLOW-MONITOR input
+ ip flow monitor NETFLOW-MONITOR output
+!
+interface TenGigabitEthernet1/1/1
+ description Uplink to CORE-1 (member of Po10)
+ no switchport
+ channel-group 10 mode active
+!
+interface TenGigabitEthernet1/1/2
+ description Uplink to CORE-2 (member of Po10)
+ no switchport
+ channel-group 10 mode active
+!
+!
+interface GigabitEthernet1/0/1
+ description Access-Port User
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ip flow monitor NETFLOW-MONITOR input
+!
+interface GigabitEthernet1/0/2
+ description Access-Port Voice+Data example
+ switchport mode access
+ switchport access vlan 10
+ switchport voice vlan 20
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet1/0/3
+ description Trunk to Access-SW1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,99
+ spanning-tree guard root
+!
+!
+interface GigabitEthernet1/0/10
+ description L3 link to WAN router (routed port)
+ no switchport
+ ip address 192.0.2.2 255.255.255.252
+ ip ospf 10 area 0
+ ip flow monitor NETFLOW-MONITOR input
+!
+interface GigabitEthernet1/0/11
+ description Dot1Q subinterface to provider handoff
+ no switchport
+ no shutdown
+!
+interface GigabitEthernet1/0/11.100
+ description Provider VLAN 100 (L3 subinterface)
+ encapsulation dot1Q 100
+ ip address 198.51.100.2 255.255.255.252
+ ip ospf 10 area 0
+!
+!
+interface Tunnel0
+ description GRE to REMOTE-SITE-1
+ ip address 172.31.0.1 255.255.255.252
+ tunnel source 192.0.2.2
+ tunnel destination 203.0.113.10
+ tunnel mode gre ip
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ ip ospf 10 area 0
+ ip flow monitor NETFLOW-MONITOR input
+!
+!
+router ospf 10
+ router-id 10.10.255.1
+ passive-interface default
+ no passive-interface Port-channel10
+ no passive-interface GigabitEthernet1/0/10
+ no passive-interface GigabitEthernet1/0/11.100
+ no passive-interface Tunnel0
+ network 10.10.10.0 0.0.0.255 area 0
+ network 10.10.20.0 0.0.0.255 area 0
+ network 10.10.30.0 0.0.0.255 area 0
+ network 172.16.0.0 0.0.0.3 area 0
+ network 172.31.0.0 0.0.0.3 area 0
+ network 192.0.2.0 0.0.0.3 area 0
+ network 198.51.100.0 0.0.0.3 area 0
+ distribute-list prefix PL-OSPF-FILTER in
+!
+!
+router eigrp 100
+ eigrp router-id 10.10.255.1
+ network 10.10.10.0 0.0.0.255
+ network 10.10.20.0 0.0.0.255
+ network 10.10.30.0 0.0.0.255
+ passive-interface default
+ no passive-interface Port-channel10
+!
+!
+ip route vrf MGMT 0.0.0.0 0.0.0.0 10.10.99.1
+ip route 0.0.0.0 0.0.0.0 192.0.2.1
+!
+!
+! --- NetFlow (Flexible NetFlow) ---
+flow record NETFLOW-RECORD
+ match ipv4 source address
+ match ipv4 destination address
+ match transport source-port
+ match transport destination-port
+ match ipv4 protocol
+ match interface input
+ collect interface output
+ collect counter bytes long
+ collect counter packets long
+ collect timestamp absolute first
+ collect timestamp absolute last
+!
+flow exporter NETFLOW-EXPORTER
+ description Export to collector
+ destination 10.10.99.60
+ source Vlan99
+ transport udp 2055
+ export-protocol netflow-v9
+!
+flow monitor NETFLOW-MONITOR
+ description Apply to interfaces/SVIs as needed
+ record NETFLOW-RECORD
+ exporter NETFLOW-EXPORTER
+ cache timeout active 60
+!
+!
+! --- SNMP ---
+snmp-server view READVIEW iso included
+snmp-server group NMS v3 priv read READVIEW
+snmp-server user nmsuser NMS v3 auth sha 0A0B0C0D0E0F10111213141516171819 priv aes 128 0102030405060708090A0B0C0D0E0F10
+snmp-server ifindex persist
+snmp-server location "DC1 - MDF - Rack 12"
+snmp-server contact "noc@example.local"
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server host 10.10.99.70 version 3 priv nmsuser
+!
+!
+! --- NTP ---
+ntp source Vlan99
+ntp server vrf MGMT 10.10.99.11 prefer
+ntp server vrf MGMT 10.10.99.12
+!
+!
+! --- DHCP Snooping / DAI (typical on access/distribution) ---
+ip dhcp snooping
+ip dhcp snooping vlan 10,20
+ip arp inspection vlan 10,20
+!
+interface GigabitEthernet1/0/3
+ ip dhcp snooping trust
+ ip arp inspection trust
+!
+!
+! --- Line / Access Controls ---
+line con 0
+ logging synchronous
+ exec-timeout 10 0
+!
+line vty 0 4
+ transport input ssh
+ access-class VTY_MGMT_ONLY in vrf-also
+ exec-timeout 10 0
+ logging synchronous
+!
+line vty 5 15
+ transport input ssh
+ access-class VTY_MGMT_ONLY in vrf-also
+ exec-timeout 10 0
+ logging synchronous
+!
+!
+! --- Optional: control-plane policing placeholder ---
+control-plane
+ service-policy input COPP-POLICY
+!
+policy-map COPP-POLICY
+ class class-default
+  police 1000000 conform-action transmit exceed-action drop
+!
+end

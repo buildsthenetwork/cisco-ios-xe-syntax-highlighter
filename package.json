@@ -1,0 +1,69 @@
+{
+  "name": "cisco-ios-xe",
+  "displayName": "Cisco IOS-XE Syntax Highlighting",
+  "description": "Practical syntax highlighting for Cisco IOS and IOS XE configurations, including common Ansible/Jinja2 comments.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/treadwayhunter/cisco-ios-xe-syntax-highlighting"
+  },
+  "bugs": {
+    "url": "https://github.com/treadwayhunter/cisco-ios-xe-syntax-highlighting/issues"
+  },
+  "homepage": "https://github.com/treadwayhunter/cisco-ios-xe-syntax-highlighting#README",
+  "engines": {
+    "vscode": "^1.63.0"
+  },
+  "keywords": [
+    "cisco",
+    "ios",
+    "ios-xe",
+    "iosxe",
+    "network",
+    "networking",
+    "configuration",
+    "syntax highlighting",
+    "ansible",
+    "jinja2",
+    "router",
+    "switch",
+    "acl",
+    "ospf",
+    "bgp"
+  ],
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "cisco-iosxe",
+        "aliases": [
+          "Cisco IOS-XE",
+          "cisco-iosxe"
+        ],
+        "extensions": [
+          ".ios",
+          ".iosxe",
+          ".cisco"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "cisco-iosxe",
+        "scopeName": "source.cisco-iosxe",
+        "path": "./syntaxes/cisco-iosxe.tmLanguage.json"
+      }
+    ]
+  },
+  "publisher": "treadwayhunter",
+  "preview": true,
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  }
+}

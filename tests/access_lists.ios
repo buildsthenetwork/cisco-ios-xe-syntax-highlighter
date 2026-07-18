@@ -1,0 +1,82 @@
+! Generated via ChatGPT
+
+! Numbered standard ACL
+access-list 10 remark === Standard ACL: allow trusted admin subnets ===
+access-list 10 permit 10.10.10.0 0.0.0.255
+access-list 10 permit 10.10.20.0 0.0.0.255
+access-list 10 remark === Explicitly block a known bad host ===
+access-list 10 deny   10.10.66.66
+access-list 10 remark === Everything else is implicitly denied ===
+!
+
+! Named standard ACL
+ip access-list standard MGMT_SOURCES
+    remark === Allowed admin networks ===
+    permit 192.168.50.0 0.0.0.255
+    permit 192.168.60.0 0.0.0.255
+    remark === Block a quarantine VLAN ===
+    deny   192.168.99.0 0.0.0.255
+    remark === Allow a jump host explicitly ===
+    permit host 192.168.50.10
+
+
+! Numbered extended ACL
+access-list 101 remark === Extended ACL: inside-to-outside edge policy ===
+access-list 101 remark --- Deny high-risk / noisy stuff first ---
+access-list 101 deny   ip 10.20.30.0 0.0.0.255 10.20.40.0 0.0.0.255
+access-list 101 deny   tcp any any eq 23
+access-list 101 deny   tcp any any eq 135
+access-list 101 deny   udp any any eq 137
+access-list 101 deny   udp any any eq 138
+access-list 101 deny   tcp any any eq 139
+access-list 101 deny   tcp any any eq 445
+access-list 101 remark --- Permit essential user traffic ---
+access-list 101 permit tcp 10.20.30.0 0.0.0.255 any eq 443
+access-list 101 permit tcp 10.20.30.0 0.0.0.255 any eq 80
+access-list 101 permit udp 10.20.30.0 0.0.0.255 any eq 53
+access-list 101 permit tcp 10.20.30.0 0.0.0.255 any eq 53
+access-list 101 permit icmp 10.20.30.0 0.0.0.255 any echo
+access-list 101 permit icmp any 10.20.30.0 0.0.0.255 echo-reply
+access-list 101 remark --- Permit return traffic (older style) ---
+access-list 101 permit tcp any 10.20.30.0 0.0.0.255 established
+
+access-list 101 remark --- Default deny is implicit ---
+!
+!
+!
+! Named extended ACL
+ip access-list extended MGMT_VLAN_IN
+    remark === Protect device management interfaces / services ===
+    remark --- Block user VLANs from hitting mgmt plane entirely ---
+    deny   ip 192.168.10.0 0.0.0.255 192.168.200.0 0.0.0.255
+    deny   ip 192.168.20.0 0.0.0.255 192.168.200.0 0.0.0.255
+
+    remark --- Allow admin subnet to manage network devices ---
+    permit tcp 192.168.50.0 0.0.0.255 192.168.200.0 0.0.0.255 eq 22
+    permit tcp 192.168.50.0 0.0.0.255 192.168.200.0 0.0.0.255 eq 443
+    permit udp 192.168.50.0 0.0.0.255 192.168.200.0 0.0.0.255 eq 161
+    permit udp 192.168.50.0 0.0.0.255 192.168.200.0 0.0.0.255 eq 162
+
+    remark --- Allow infrastructure services in mgmt VLAN ---
+    permit udp 192.168.200.0 0.0.0.255 any eq 514
+    permit udp 192.168.200.0 0.0.0.255 any eq 123
+    permit udp 192.168.200.0 0.0.0.255 any eq 53
+    permit tcp 192.168.200.0 0.0.0.255 any eq 53
+
+    remark --- Allow ping for troubleshooting ---
+    permit icmp 192.168.50.0 0.0.0.255 192.168.200.0 0.0.0.255 echo
+    permit icmp 192.168.200.0 0.0.0.255 192.168.50.0 0.0.0.255 echo-reply
+
+    remark --- Deny everything else to mgmt VLAN ---
+    deny   ip any 192.168.200.0 0.0.0.255
+
+
+int g1/0/1
+    ip access-group MGMT_VLAN_IN in
+!
+
+ntp access-group peer NTP_PEERS
+ntp access-group serve NTP_CLIENTS
+ntp access-group serve-only NTP_CLIENTS
+ntp access-group query-only NTP_QUERIES
+

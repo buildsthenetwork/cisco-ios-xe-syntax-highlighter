@@ -1,0 +1,40 @@
+! ---------- Identity sources ----------
+aaa new-model
+
+tacacs server TAC1
+ address ipv4 192.168.10.1 key 0 supersecret
+ timeout 5
+
+tacacs server TAC2
+ address ipv4 10.0.0.1 key 0 supersecret
+ timeout 5
+ address ipv4 
+
+aaa group server tacacs+ TAC-GRP
+ server name TAC1
+ server name TAC2
+ ip tacacs source-interface Vlan600
+
+! ---------- Authentication ----------
+aaa authentication login default group TAC-GRP local
+aaa authentication enable default group TAC-GRP enable
+aaa authentication login default group tacacs+ local
+! ---------- Authorization ----------
+aaa authorization exec default group TAC-GRP local if-authenticated
+aaa authorization commands 0 default group TAC-GRP local if-authenticated
+aaa authorization commands 15 default group TAC-GRP_1 local if-authenticated
+
+! ---------- Accounting ----------
+aaa accounting exec default start-stop group TAC-GRP
+aaa accounting commands 15 default start-stop group TAC-GRP-1
+aaa accounting system default start-stop group TAC-GRP
+
+! ---------- Line usage ----------
+line vty 0 4
+ login authentication default
+ authorization exec default
+ transport input ssh
+
+interface range g1/0/1-48
+
+!

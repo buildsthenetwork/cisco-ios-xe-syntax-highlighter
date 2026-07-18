@@ -1,0 +1,4 @@
+router ospf 100
+ passive-interface default
+ no passive-interface GigabitEthernet0
+!
