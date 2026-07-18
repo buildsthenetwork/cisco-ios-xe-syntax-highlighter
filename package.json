@@ -6,12 +6,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/treadwayhunter/cisco-ios-xe-syntax-highlighting"
+    "url": "https://github.com/buildsthenetwork/cisco-ios-xe-syntax-highlighter"
   },
   "bugs": {
-    "url": "https://github.com/treadwayhunter/cisco-ios-xe-syntax-highlighting/issues"
+    "url": "https://github.com/buildsthenetwork/cisco-ios-xe-syntax-highlighter/issues"
   },
-  "homepage": "https://github.com/treadwayhunter/cisco-ios-xe-syntax-highlighting#README",
+  "homepage": "https://github.com/buildsthenetwork/cisco-ios-xe-syntax-highlighter#README",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -59,7 +59,7 @@
       }
     ]
   },
-  "publisher": "treadwayhunter",
+  "publisher": "buildsthenetwork",
   "preview": true,
   "capabilities": {
     "untrustedWorkspaces": {
