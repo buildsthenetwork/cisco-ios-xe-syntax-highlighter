@@ -2,7 +2,7 @@
   "name": "cisco-ios-xe",
   "displayName": "Cisco IOS-XE Config Highlighting",
   "description": "Practical syntax highlighting for Cisco IOS and IOS XE configurations, including common Ansible/Jinja2 comments.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "repository": {
     "type": "git",
