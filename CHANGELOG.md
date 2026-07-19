@@ -7,8 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ### Added
+- v0.1.1 Added rules for highlighting policy-map names.
+- v0.1.1 Added rules for highlighting class-maps.
+- v0.1.1 Added rules for highlighting service-templates.
 
-- Additional syntax coverage and refinements will be documented here before the next release.
+
+### Fixed
+- v0.1.1 Removed highlighting from remark keyword to only highlight text.
 
 ## [0.1.0] - 2026-07-18
 

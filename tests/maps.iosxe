@@ -1,0 +1,375 @@
+!
+! ============================================================
+! MATCH ACCESS LISTS
+! ============================================================
+!
+ip access-list extended ACL-VOICE
+ remark Match RTP voice traffic
+ permit udp any any range 16384 32767
+!
+ip access-list extended ACL-VIDEO
+ remark Match video conferencing traffic
+ permit tcp any any eq 1720
+ permit udp any any range 50000 59999
+!
+! This is a comment.
+ip access-list extended ACL-MANAGEMENT
+  ! can I put a comment in here
+ remark Match network management traffic
+ permit tcp 10.10.10.0 0.0.0.255 any eq 22
+ permit udp 10.10.10.0 0.0.0.255 any eq snmp
+ permit udp 10.10.10.0 0.0.0.255 any eq 161
+ permit udp 10.10.10.0 0.0.0.255 any eq 162
+!
+ip access-list extended ACL-ROUTING
+ remark OSPF, BGP, and EIGRP control traffic
+ permit ospf any any
+ permit tcp any any eq bgp
+ permit eigrp any any
+!
+!
+! ============================================================
+! STANDARD QOS CLASS MAPS
+! ============================================================
+!
+class-map match-any CM-REALTIME-VOICE
+ match dscp ef
+ match access-group name ACL-VOICE
+ match protocol rtp audio
+!
+class-map match-all CM-SIGNALING
+ match dscp cs3
+ match protocol sip
+!
+class-map match-any CM-VIDEO
+ match dscp af41
+ match dscp af42
+ match dscp af43
+ match access-group name ACL-VIDEO
+!
+class-map match-any CM-NETWORK-CONTROL
+ match dscp cs6
+ match dscp cs7
+ match access-group name ACL-ROUTING
+!
+class-map match-any CM-MANAGEMENT
+ match dscp cs2
+ match access-group name ACL-MANAGEMENT
+ match protocol ssh
+ match protocol snmp
+!
+class-map match-any CM-BUSINESS-CRITICAL
+ match dscp af21
+ match dscp af22
+ match dscp af23
+ match protocol citrix
+!
+class-map match-any CM-BULK-DATA
+ match dscp af11
+ match dscp af12
+ match dscp af13
+ match protocol ftp
+!
+class-map match-all CM-SCAVENGER
+ match dscp cs1
+!
+class-map match-any CM-DEFAULT-TRAFFIC
+ match dscp default
+ match protocol http
+ match protocol https
+!
+!
+! ============================================================
+! MARKING POLICY
+! ============================================================
+!
+policy-map PM-MARK-INGRESS
+ class CM-REALTIME-VOICE
+  set dscp ef
+ class CM-SIGNALING
+  set dscp cs3
+ class CM-VIDEO
+  set dscp af41
+ class CM-NETWORK-CONTROL
+  set dscp cs6
+ class CM-MANAGEMENT
+  set dscp cs2
+ class CM-BUSINESS-CRITICAL
+  set dscp af21
+ class CM-BULK-DATA
+  set dscp af11
+ class CM-SCAVENGER
+  set dscp cs1
+ class class-default
+  set dscp default
+!
+!
+! ============================================================
+! WAN QUEUING POLICY
+! ============================================================
+!
+policy-map PM-WAN-CHILD
+ class CM-REALTIME-VOICE
+  priority percent 10
+  police rate percent 10
+   conform-action transmit
+   exceed-action drop
+ class CM-SIGNALING
+  bandwidth percent 5
+ class CM-VIDEO
+  bandwidth percent 25
+  random-detect dscp-based
+ class CM-NETWORK-CONTROL
+  bandwidth percent 5
+ class CM-MANAGEMENT
+  bandwidth percent 5
+ class CM-BUSINESS-CRITICAL
+  bandwidth percent 20
+  queue-limit 256 packets
+ class CM-BULK-DATA
+  bandwidth percent 10
+  random-detect
+ class CM-SCAVENGER
+  bandwidth percent 1
+ class class-default
+  bandwidth percent 19
+  fair-queue
+!
+!
+! ============================================================
+! HIERARCHICAL SHAPING POLICY
+! ============================================================
+!
+policy-map PM-WAN-PARENT-100M
+ class class-default
+  shape average 100000000
+  service-policy PM-WAN-CHILD
+!
+policy-map PM-WAN-PARENT-500M
+ class class-default
+  shape average 500000000
+  service-policy PM-WAN-CHILD
+!
+!
+! ============================================================
+! SIMPLE POLICING POLICY
+! ============================================================
+!
+class-map match-any CM-GUEST-INTERNET
+ match vlan 999
+ match dscp default
+!
+policy-map PM-GUEST-POLICER
+ class CM-GUEST-INTERNET
+  police 20000000 625000 1250000
+   conform-action transmit
+   exceed-action set-dscp-transmit cs1
+   violate-action drop
+ class class-default
+  police 100000000
+   conform-action transmit
+   exceed-action drop
+!
+!
+! ============================================================
+! LAN EGRESS POLICY
+! ============================================================
+!
+policy-map PM-LAN-EGRESS
+ class CM-REALTIME-VOICE
+  priority level 1 percent 10
+ class CM-VIDEO
+  priority level 2 percent 20
+ class CM-NETWORK-CONTROL
+  bandwidth remaining percent 10
+ class CM-MANAGEMENT
+  bandwidth remaining percent 5
+ class CM-BUSINESS-CRITICAL
+  bandwidth remaining percent 25
+ class CM-BULK-DATA
+  bandwidth remaining percent 10
+ class CM-SCAVENGER
+  bandwidth remaining percent 1
+ class class-default
+  bandwidth remaining percent 19
+!
+!
+! ============================================================
+! CONTROL PLANE POLICING
+! ============================================================
+!
+class-map match-any CM-COPP-ROUTING
+ match access-group name ACL-ROUTING
+!
+class-map match-any CM-COPP-MANAGEMENT
+ match access-group name ACL-MANAGEMENT
+!
+class-map match-any CM-COPP-ICMP
+ match protocol icmp
+!
+class-map match-any CM-COPP-ARP
+ match protocol arp
+!
+class-map match-any CM-COPP-DHCP
+ match protocol dhcp
+!
+policy-map PM-CONTROL-PLANE
+ class CM-COPP-ROUTING
+  police 5000000
+   conform-action transmit
+   exceed-action drop
+ class CM-COPP-MANAGEMENT
+  police 2000000
+   conform-action transmit
+   exceed-action drop
+ class CM-COPP-ICMP
+  police 1000000
+   conform-action transmit
+   exceed-action drop
+ class CM-COPP-ARP
+  police 500000
+   conform-action transmit
+   exceed-action drop
+ class CM-COPP-DHCP
+  police 1000000
+   conform-action transmit
+   exceed-action drop
+ class class-default
+  police 250000
+   conform-action transmit
+   exceed-action drop
+!
+control-plane
+ service-policy input PM-CONTROL-PLANE
+!
+!
+! ============================================================
+! CLASS-MAP TYPE CONTROL SUBSCRIBER
+! IBNS 2.0 EVENT MATCHING
+! ============================================================
+!
+class-map type control subscriber match-all AAA-SVR-DOWN-AUTHD-HOST
+ match result-type aaa-timeout
+ match authorization-status authorized
+!
+class-map type control subscriber match-all AAA-SVR-DOWN-UNAUTHD-HOST
+ match result-type aaa-timeout
+ match authorization-status unauthorized
+!
+class-map type control subscriber match-all DOT1X-FAILED
+ match method dot1x
+ match result-type method dot1x authoritative
+!
+class-map type control subscriber match-all DOT1X-NO-RESPONSE
+ match method dot1x
+ match result-type method dot1x agent-not-found
+!
+class-map type control subscriber match-all DOT1X-TIMEOUT
+ match method dot1x
+ match result-type method dot1x method-timeout
+!
+class-map type control subscriber match-all MAB-FAILED
+ match method mab
+ match result-type method mab authoritative
+!
+class-map type control subscriber match-all MAB-TIMEOUT
+ match method mab
+ match result-type method mab method-timeout
+!
+class-map type control subscriber match-any IN-CRITICAL-AUTH
+ match activated-service-template CRITICAL_AUTH_ACCESS
+ match activated-service-template CRITICAL_VOICE_ACCESS
+!
+!
+! ============================================================
+! IBNS 2.0 SERVICE TEMPLATES
+! ============================================================
+!
+service-template CRITICAL_AUTH_ACCESS
+ vlan 999
+ access-group ACL-CRITICAL-AUTH
+!
+service-template CRITICAL_VOICE_ACCESS
+ voice vlan
+ vlan 888
+!
+service-template QUARANTINE_ACCESS
+ vlan 997
+ access-group ACL-QUARANTINE
+!
+!
+! ============================================================
+! IBNS 2.0 CONTROL SUBSCRIBER POLICY
+! ============================================================
+!
+policy-map type control subscriber PM-ACCESS-SESSION
+ event session-started match-all
+  10 class always do-until-failure
+   10 authenticate using dot1x priority 10
+!
+ event authentication-failure match-first
+  10 class DOT1X-NO-RESPONSE do-until-failure
+   10 terminate dot1x
+   20 authenticate using mab priority 20
+  20 class DOT1X-FAILED do-until-failure
+   10 terminate dot1x
+   20 authenticate using mab priority 20
+  30 class DOT1X-TIMEOUT do-until-failure
+   10 terminate dot1x
+   20 authenticate using mab priority 20
+  40 class MAB-FAILED do-until-failure
+   10 terminate mab
+   20 activate service-template QUARANTINE_ACCESS
+  50 class AAA-SVR-DOWN-AUTHD-HOST do-until-failure
+   10 pause reauthentication
+   20 authorize
+  60 class AAA-SVR-DOWN-UNAUTHD-HOST do-until-failure
+   10 activate service-template CRITICAL_AUTH_ACCESS
+   20 activate service-template CRITICAL_VOICE_ACCESS
+   30 authorize
+  70 class always do-until-failure
+   10 terminate dot1x
+   20 terminate mab
+   30 authentication-restart 60
+!
+ event agent-found match-all
+  10 class always do-until-failure
+   10 terminate mab
+   20 authenticate using dot1x priority 10
+!
+ event aaa-available match-all
+  10 class IN-CRITICAL-AUTH do-until-failure
+   10 clear-session
+  20 class always do-until-failure
+   10 resume reauthentication
+!
+ event authentication-success match-all
+  10 class always do-until-failure
+   10 activate service-template DEFAULT_LINKSEC_POLICY_SHOULD_SECURE
+   20 authorize
+!
+ event violation match-all
+  10 class always do-until-failure
+   10 restrict
+!
+!
+! ============================================================
+! INTERFACE APPLICATION EXAMPLES
+! ============================================================
+!
+interface GigabitEthernet1/0/10
+ description USER-ACCESS-PORT
+ switchport mode access
+ switchport access vlan 100
+ service-policy type control subscriber PM-ACCESS-SESSION
+ service-policy input PM-MARK-INGRESS
+ service-policy output PM-LAN-EGRESS
+!
+interface TenGigabitEthernet1/1/1
+ description WAN-UPLINK-100M
+ service-policy output PM-WAN-PARENT-100M
+!
+interface TenGigabitEthernet1/1/2
+ description WAN-UPLINK-500M
+ service-policy output PM-WAN-PARENT-500M
+!
