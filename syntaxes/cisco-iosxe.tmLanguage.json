@@ -59,7 +59,7 @@
 					"name": "variable.permit"
 				},
 				{
-					"match": "(remark)\\s+(.*)\\b",
+					"match": "(remark)\\s+(.*)$",
 					
 					"captures":{
 						"2": {
