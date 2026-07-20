@@ -1,0 +1,215 @@
+!
+! ============================================================
+! GLOBAL AAA AND RADIUS CONFIGURATION
+! ============================================================
+!
+aaa new-model
+!
+aaa group server radius ISE-RADIUS
+ server name ISE-PSN-01
+ server name ISE-PSN-02
+ deadtime 15
+!
+aaa authentication dot1x default group ISE-RADIUS
+aaa authorization network default group ISE-RADIUS
+aaa accounting dot1x default start-stop group ISE-RADIUS
+aaa accounting update newinfo periodic 2880
+!
+radius server ISE-PSN-01
+ address ipv4 10.10.100.21 auth-port 1812 acct-port 1813
+ automate-tester username radius-test probe-on
+ key 7 02050D480809
+!
+radius server ISE-PSN-02
+ address ipv4 10.10.100.22 auth-port 1812 acct-port 1813
+ automate-tester username radius-test probe-on
+ key 7 02050D480809
+!
+aaa server radius dynamic-author
+ client 10.10.100.21 server-key 7 02050D480809
+ client 10.10.100.22 server-key 7 02050D480809
+ auth-type any
+!
+radius-server dead-criteria time 10 tries 3
+radius-server deadtime 15
+!
+dot1x system-auth-control
+dot1x critical eapol
+!
+! ============================================================
+! DISCOVERY PROTOCOLS
+! Device Classifier and Device Sensor use CDP, LLDP and DHCP
+! information to identify directly connected endpoints.
+! ============================================================
+!
+cdp run
+lldp run
+!
+! ============================================================
+! DEVICE CLASSIFIER
+! Enables the local IOS-XE device classification engine.
+! ============================================================
+!
+device classifier
+!
+! ============================================================
+! DEVICE SENSOR FILTERS
+! Select the CDP, LLDP and DHCP attributes sent to ISE.
+! ============================================================
+!
+device-sensor filter-list cdp list ISE-CDP-TLVS
+ tlv name device-name
+ tlv name address-type
+ tlv name capabilities-type
+ tlv name platform-type
+ tlv name version-type
+!
+device-sensor filter-list lldp list ISE-LLDP-TLVS
+ tlv name chassis-id
+ tlv name port-id
+ tlv name system-name
+ tlv name system-description
+ tlv name system-capabilities
+ tlv name management-address
+!
+device-sensor filter-list dhcp list ISE-DHCP-OPTIONS
+ option name host-name
+ option name parameter-request-list
+ option name class-identifier
+ option name client-identifier
+ option number 12
+ option number 55
+ option number 60
+ option number 61
+!
+device-sensor filter-spec cdp include list ISE-CDP-TLVS
+device-sensor filter-spec lldp include list ISE-LLDP-TLVS
+device-sensor filter-spec dhcp include list ISE-DHCP-OPTIONS
+!
+device-sensor accounting
+device-sensor notify all-changes
+!
+! ============================================================
+! ACCESS-SESSION ATTRIBUTE FILTER
+! Adds collected protocol information to RADIUS authentication
+! and accounting messages.
+! ============================================================
+!
+access-session attributes filter-list list ISE-PROFILING
+ cdp
+ dhcp
+ lldp
+ vlan-id
+!
+access-session authentication attributes filter-spec include list ISE-PROFILING
+access-session accounting attributes filter-spec include list ISE-PROFILING
+!
+! ============================================================
+! SISF-BASED DEVICE TRACKING
+! ============================================================
+!
+device-tracking policy ACCESS-ENDPOINTS
+ tracking enable
+ security-level glean
+ device-role node
+ protocol dhcp4
+ protocol dhcp6
+ protocol arp
+ protocol ndp
+ protocol udp
+!
+! ============================================================
+! DHCP SNOOPING
+! Provides DHCP information to Device Sensor and protects
+! access VLANs against unauthorized DHCP servers.
+! ============================================================
+!
+ip dhcp snooping
+ip dhcp snooping vlan 10,20,30,40,999
+no ip dhcp snooping information option
+!
+! ============================================================
+! OPTIONAL PRE-AUTHENTICATION ACL
+! Permit only the traffic required before authorization.
+! Adjust DNS, DHCP and ISE addresses for the environment.
+! ============================================================
+!
+ip access-list extended PREAUTH-IPV4
+ remark Permit DHCP client traffic
+ permit udp any eq bootpc any eq bootps
+ permit udp any eq bootps any eq bootpc
+ remark Permit DNS
+ permit udp any any eq domain
+ permit tcp any any eq domain
+ remark Permit access to ISE portals and services
+ permit tcp any host 10.10.100.21 eq 443
+ permit tcp any host 10.10.100.22 eq 443
+ remark Permit ICMP for basic diagnostics
+ permit icmp any any
+ remark Deny all remaining traffic before authorization
+ deny ip any any log
+!
+! ============================================================
+! ACCESS INTERFACE TEMPLATE
+! Closed-mode wired 802.1X with MAB fallback.
+! ============================================================
+!
+template WIRED_DOT1X_CLOSED
+ switchport mode access
+ switchport nonegotiate
+ switchport access vlan 999
+ switchport voice vlan 20
+ device-tracking attach-policy ACCESS-ENDPOINTS
+ ip access-group PREAUTH-IPV4 in
+ authentication periodic
+ authentication timer reauthenticate server
+ access-session host-mode multi-domain
+ access-session control-direction in
+ access-session closed
+ access-session port-control auto
+ mab
+ dot1x pae authenticator
+ dot1x timeout tx-period 10
+ dot1x timeout supp-timeout 7
+ dot1x max-reauth-req 2
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ storm-control broadcast level 1.00 0.50
+ service-policy type control subscriber DOT1X-MAB-POLICY
+!
+! ============================================================
+! ACCESS PORTS
+! ============================================================
+!
+interface range GigabitEthernet1/0/1-24
+ description USER ACCESS PORT
+ source template WIRED_DOT1X_CLOSED
+!
+interface GigabitEthernet1/0/1
+ description USER-WS-001
+!
+interface GigabitEthernet1/0/2
+ description USER-WS-002 WITH CISCO PHONE
+!
+interface GigabitEthernet1/0/3
+ description NETWORK PRINTER
+!
+! ============================================================
+! UPLINKS
+! DHCP snooping trust belongs only on validated infrastructure
+! links toward the DHCP server or distribution layer.
+! ============================================================
+!
+interface TenGigabitEthernet1/1/1
+ description UPLINK-TO-DISTRIBUTION-01
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,999
+ ip dhcp snooping trust
+!
+interface TenGigabitEthernet1/1/2
+ description UPLINK-TO-DISTRIBUTION-02
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,999
+ ip dhcp snooping trust
+!
+end

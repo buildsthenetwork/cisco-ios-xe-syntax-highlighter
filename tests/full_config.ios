@@ -1,4 +1,5 @@
 !
+conf t
 version 17.9
 service timestamps debug datetime msec localtime show-timezone
 service timestamps log datetime msec localtime show-timezone
@@ -9,7 +10,8 @@ service sequence-numbers
 service call-home
 no service pad
 !
-hostname DIST-01
+hostname {{ hostname }}
+hostname HOSTNAME
 !
 boot-start-marker
 boot system flash:cat9k_iosxe.17.09.05.SPA.bin
@@ -75,6 +77,9 @@ archive
 ! TODO access control or policy enforcement?
 username netadmin privilege 15 secret 9 $9$EXAMPLE_HASH_REDACTED
 username opsuser privilege 5 secret 9 $9$EXAMPLE_HASH_REDACTED
+username ADMIN privilege 15 secret 9 $9$EXAMPLE_HASH_REDACTED
+username SUPER-ADMIN privilege 15 secret 9 $9$EXAMPLE_HASH_REDACTED
+username SUPER-ADMIN-2 secret 9 $9$EXAMPLE_HASH_REDACTED
 !
 !
 aaa new-model
@@ -136,12 +141,16 @@ tacacs server TACACS2
  key 7 05080F1C2243
  timeout 5
 !
+aaa session-id common
 aaa authentication login default group TACACS-GRP local
 aaa authentication enable default group TACACS-GRP enable
 aaa authorization exec default group TACACS-GRP local
 aaa authorization commands 15 default group TACACS-GRP local
 aaa accounting exec default start-stop group TACACS-GRP
 aaa accounting commands 15 default start-stop group TACACS-GRP
+aaa authorization config-commands
+aaa authorization console
+aaa accounting update newinfo periodic 2880
 !
 enable secret 9 $9$EXAMPLE_HASH_REDACTED
 !
@@ -417,4 +426,10 @@ policy-map COPP-POLICY
  class class-default
   police 1000000 conform-action transmit exceed-action drop
 !
+conf conf
+copy run start
+wr mem
+write mem
+write memory
+wr memory
 end

@@ -3,22 +3,125 @@
 	"scopeName": "source.cisco-iosxe",
 	"patterns": [
 		{
-			"include": "#globals"
+			"include": "#jinja2"
 		},
 		{
-			"include": "#top-level"
+			"include": "#global-configs"
 		},
 		{
 			"include": "#keywords"
 		}
 	],
 	"repository": {
-		"globals": {
+		"global-configs": {
 			"patterns": [
 				{
 					"match": "^\\s*!.*$",
 					"name": "comment.line.exclamation.cisco"
 				},
+				{
+					"include": "#aaa"
+				},
+				{
+					"include": "#radius"
+				},
+				{
+					"include": "#tacacs"
+				},
+				{
+					"include": "#access-list"
+				},
+				{
+					"include": "#ip"
+				},
+				{
+					"include": "#router"
+				},
+				{
+					"include": "#vrf"
+				},
+				{
+					"include": "#policy-map"
+				},
+				{
+					"include": "#class-map"
+				},
+				{
+					"include": "#service-template"
+				},
+				{
+					"include": "#interface"
+				},
+				{
+					"include": "#flow"
+				},
+				{
+					"include": "#line"
+				},
+				{
+					"include": "#control-plane"
+				},
+				{
+					"include": "#vlan"
+				},
+				{
+					"include": "#archive"
+				},
+				{
+					"include": "#spanning-tree"
+				},
+				{
+					"include": "#username"
+				},
+				{
+					"include": "#enable"
+				},
+				{
+					"include": "#logging"
+				},
+				{
+					"include": "#service"
+				},
+				{
+					"include": "#hostname"
+				},
+				{
+					"include": "#banner"
+				},
+				{
+					"include": "#ntp"
+				},
+				{
+					"include": "#snmp"
+				},
+				{
+					"include": "#snmp-server"
+				},
+				{
+					"include": "#crypto"
+				},
+				{
+					"include": "#errdisable"
+				},
+				{
+					"include": "#device"
+				},
+				{
+					"include": "#device-sensor"
+				},
+				{
+					"include": "#access-session"
+				},
+				{
+					"include": "#device-tracking"
+				},
+				{
+					"include": "#description"
+				}
+			]
+		},
+		"jinja2": {
+			"patterns": [
 				{
 					"match": "^\\s*{(#.*#)}\\s+$",
 					"captures": {
@@ -28,19 +131,12 @@
 					}
 				},
 				{
-					"include": "#globals-interfaces"
+					"match": "{{\\s[a-z0-9\\.\\-_]+\\s}}",
+					"name": "variable.jinja2"
 				},
 				{
-					"match": "\\b(?:(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\.){3}(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\b",
-					"name": "constant.numeric.ip-address.cisco"
-				},
-				{
-					"match": "(description)(.*\\n)",
-					"captures": {
-						"2": {
-							"name": "string.unquoted.banner.cisco-iosxe"
-						}
-					}
+					"match": "{%\\s.*\\s%}",
+					"name": "keyword.jinja2"
 				}
 			]
 		},
@@ -60,8 +156,7 @@
 				},
 				{
 					"match": "(remark)\\s+(.*)$",
-					
-					"captures":{
+					"captures": {
 						"2": {
 							"name": "string.unquoted.acl.remark"
 						}
@@ -70,312 +165,61 @@
 				{
 					"match": "(?i)^\\s*(no|shut|shutdown)\\b",
 					"name": "keyword.control.negation.cisco"
+				},
+				{
+					"match": "(?i)(loopback|lo)[0-9]+",
+					"name": "variable.interfaces.loopback"
+				},
+				{
+					"match": "(?i)vlan[0-9]+",
+					"name": "variable.interfaces.svi"
+				},
+				{
+					"match": "(?i)(port-channel[0-9]+|po[0-9]+)",
+					"name": "variable.interfaces.link-agg"
+				},
+				{
+					"match": "(?i)([a-z]*gigabitethernet)([0-9/]+)($|\\.[0-9]+)",
+					"name": "variable.interfaces.physical.full-name"
+				},
+				{
+					"match": "(?i)(g|gi|te|ten|twe|fo|hun)([0-9/]+)($|\\.[0-9]+)",
+					"name": "variable.interfaces.physical.short-name"
+				},
+				{
+					"match": "(?i)(tunnel|tun)[0-9]+",
+					"name": "variable.interfaces.tunnel"
+				},
+				{
+					"match": "\\b(?:(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\.){3}(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\b",
+					"name": "constant.numeric.ip-address.cisco"
+				},
+				{
+					"match": "^(conf|configure) (t|term|terminal|conf|confirm)",
+					"name": "keyword.configure"
+				},
+				{
+					"match": "^(copy)",
+					"name": "keyword.copy"
+				},
+				{
+					"match": "^end",
+					"name": "keyword.control.end"
+				},
+				{
+					"match": "^(write|wr) (memory|mem)",
+					"name": "keyword.write"
 				}
 			]
 		},
-		"top-level": {
-			"patterns": [
-				{
-					"include": "#top-level-contexts"
-				},
-				{
-					"include": "#top-level-commands"
-				}
-			]
-		},
-		"top-level-contexts": {
-			"patterns": [
-				{
-					"include": "#top-level-contexts-auth"
-				},
-				{
-					"include": "#top-level-contexts-acl"
-				},
-				{
-					"include": "#top-level-commands-layer2"
-				},
-				{
-					"include": "#top-level-contexts-routing"
-				},
-				{
-					"include": "#top-level-contexts-maps"
-				},
-				{
-					"match": "^(interface|int)",
-					"name": "entity.name.type.interface.cisco"
-				},
-				{
-					"match": "^control-plane",
-					"name": "entity.name.type.control-plane.cisco"
-				},
-				{
-					"match": "^flow (record|exporter|monitor)",
-					"name": "entity.name.type.netflow.cisco"
-				},
-				{
-					"match": "^line (con|vty|aux)",
-					"name": "entity.name.type.lines.cisco"
-				},
-
-				{
-					"match": "^(vlan) ([0-9]{1,4})",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.vlan.cisco"
-						},
-						"2": {
-							"name": "variable.vlan-id.cisco"
-						}
-					}
-				},
-				{
-					"match": "^archive",
-					"name": "entity.name.type.archive.cisco"
-				}
-			]
-		},
-		"top-level-contexts-auth": {
-			"patterns": [
-				{
-					"match": "^(?i)(aaa group server)\\s+(radius|tacacs\\+)\\s([0-9a-z\\-_]+)",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.aaa.server"
-						},
-						"3": {
-							"name": "variable.aaa.server.name"
-						}
-					}
-				},
-				{
-					"match": "^(?i)((?:tacacs|radius) server) ([a-z0-9-_]+)",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.aaa.server-type"
-						},
-						"2": {
-							"name": "variable.aaa.server.name"
-						}
-					}
-				}
-			]
-		},
-		"top-level-contexts-acl": {
-			"patterns": [
-				{
-					"match": "^(?i)(access-list)\\s+([0-9]+)",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.access-list"
-						},
-						"2": {
-							"name": "variable.acl.number"
-						}
-					}
-				},
-				{
-					"match": "(?i)(ip access-list)\\s+(standard|extended)\\s+([0-9a-z\\-_]+)",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.ip-access-list"
-						},
-						"3": {
-							"name": "variable.acl.name"
-						}
-					}
-				}
-			]
-		},
-		"top-level-contexts-routing": {
-			"patterns": [
-				{
-					"match": "^(?i)(router)\\s+(ospf|eigrp|rip|bgp)\\s+([0-9]+)$",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.router.cisco"
-						},
-						"3": {
-							"name": "variable.router.autonomous-system"
-						}
-					}
-				},
-				{
-					"match": "^(?i)(vrf)\\s+(definition)\\s+([0-9a-z\\-_]+)$",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.router-vrf"
-						},
-						"3": {
-							"name": "variable.vrf.name"
-						}
-					}
-				}
-			]
-		},
-		"top-level-contexts-maps": {
-			"patterns": [
-				{
-					"match": "^(policy-map)\\s+(type control subscriber)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.policy-map.cisco"
-						},
-						"3": {
-							"name": "variable.policy-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(policy-map)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.policy-map.cisco"
-						},
-						"2": {
-							"name": "variable.policy-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(class-map)\\s+(match-all|match-any)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.class-map"
-						},
-						"3": {
-							"name": "variable.class-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(class-map)\\s+(type control subscriber)\\s+(match-all|match-any)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.class-map"
-						},
-						"4": {
-							"name": "variable.class-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(?i)(service-template)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.service-template"
-						},
-						"2": {
-							"name": "variable.service-template.name"
-						}
-					}
-				}
-			]
-		},
-		"top-level-commands": {
-			"patterns": [
-				{
-					"include": "#top-level-commands-auth"
-				},
-				{
-					"include": "#top-level-commands-logging"
-				},
-				{
-					"include": "#top-level-commands-routing"
-				},
-				{
-					"include": "#top-level-commands-services"
-				},
-				{
-					"match": "^(?i)(hostname)\\s+([0-9a-z\\-_]+)$",
-					"captures": {
-						"1": {
-							"name": "keyword.control.hostname"
-						},
-						"2": {
-							"name": "variable.hostname"
-						}
-					}
-				},
-				{
-					"begin": "^\\s*(banner\\s+(?:login|exec|motd))\\s+(\\S)$",
-					"beginCaptures": {
-						"1": {
-							"name": "keyword.control.type.banner.cisco-iosxe"
-						},
-						"2": {
-							"name": "punctuation.definition.banner-delimiter.cisco-iosxe"
-						}
-					},
-					"end": "^(\\2).*\n$",
-					"name": "string.unquoted.banner.cisco-iosxe"
-				},
-				{
-					"match": "^ntp",
-					"name": "keyword.control.ntp.cisco"
-				},
-				{
-					"match": "^ip dhcp snooping",
-					"name": "keyword.control.dhcp-snooping.cisco"
-				},
-				{
-					"match": "^ip arp inspection",
-					"name": "keyword.control.dai.cisco"
-				},
-				{
-					"match": "^snmp-server",
-					"name": "keyword.control.snmp-server.cisco"
-				},
-				{
-					"match": "^(crypto key generate) rsa modulus ([0-9]+)",
-					"captures": {
-						"1": {
-							"name": "keyword.control.crypto-key-generate.cisco"
-						},
-						"2": {
-							"name": "variable.modulus-size.cisco"
-						}
-					}
-				},
-				{
-					"match": "ip ssh",
-					"name": "keyword.control.type.ip-ssh.cisco"
-				},
-				{
-					"match": "^(ip domain)\\s+name\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "keyword.control.type.ip-domain.cisco"
-						},
-						"2": {
-							"name": "variable.domain-name.cisco"
-						}
-					}
-				},
-				{
-					"match": "^ip name-server",
-					"name": "keyword.control.ip-name-servers.cisco"
-				}
-			]
-		},
-		"top-level-commands-auth": {
+		"aaa": {
 			"patterns": [
 				{
 					"match": "^aaa new-model",
 					"name": "keyword.control.auth.aaa-new-model"
 				},
 				{
-					"match": "^(username) ([a-zA-Z]+)",
-					"captures": {
-						"1": {
-							"name": "keyword.control.auth.username"
-						},
-						"2": {
-							"name": "variable.auth.username"
-						}
-					}
-				},
-				{
-					"match": "^(aaa (?:authentication|authorization|accounting)).*group ([0-9a-zA-Z\\-_]+)",
+					"match": "^(aaa (?:authentication|authorization|accounting)).*group\\s+([0-9a-zA-Z\\-_]+)",
 					"captures": {
 						"1": {
 							"name": "keyword.control.auth.aaa"
@@ -386,29 +230,92 @@
 					}
 				},
 				{
+					"match": "^(?i)(aaa group server)\\s+(radius|tacacs\\+)\\s([0-9a-z\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.aaa.server"
+						},
+						"3": {
+							"name": "variable.aaa.server.name"
+						}
+					}
+				},
+				{
+					"match": "^(?i)aaa server",
+					"name": "keyword.control.aaa-server"
+				},
+				{
+					"match": "^(?i)aaa session-id",
+					"name": "keyword.control.aaa-session-id"
+				},
+				{
+					"match": "^(?i)aaa (authorization|accounting)",
+					"name": "keyword.control.aaa"
+				}
+			]
+		},
+		"radius": {
+			"patterns": [
+				{
 					"match": "^radius-server",
 					"name": "keyword.control.auth.radius"
+				},
+				{
+					"match": "^(?i)(radius server) ([a-z0-9-_]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.aaa.radius"
+						},
+						"2": {
+							"name": "variable.aaa.server.name"
+						}
+					}
+				}
+			]
+		},
+		"tacacs": {
+			"patterns": [
+				{
+					"match": "^(?i)(tacacs\\s+server) ([a-z0-9-_]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.aaa.tacacs"
+						},
+						"2": {
+							"name": "variable.aaa.server.name"
+						}
+					}
+				},
+				{
+					"match": "^(?i)tacacs-server",
+					"name": "keyword.control.tacacs-server"
+				}
+			]
+		},
+		"access-list": {
+			"patterns": [
+				{
+					"match": "^(?i)(access-list)\\s+([0-9]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.access-list"
+						},
+						"2": {
+							"name": "variable.acl.number"
+						}
+					}
+				}
+			]
+		},
+		"ip": {
+			"patterns": [
+				{
+					"include": "#ip-access-list"
 				},
 				{
 					"match": "^ip radius",
 					"name": "keyword.control.auth.radius.source-interface"
 				},
-				{
-					"match": "^enable secret",
-					"name": "keyword.control.auth.enable-secret"
-				}
-			]
-		},
-		"top-level-commands-logging": {
-			"patterns": [
-				{
-					"match": "logging (buffered|console|monitor|host|source-interface)",
-					"name": "keyword.control.logging"
-				}
-			]
-		},
-		"top-level-commands-routing": {
-			"patterns": [
 				{
 					"match": "ip routing",
 					"name": "keyword.control.ip-routing"
@@ -435,10 +342,197 @@
 				{
 					"match": "^ip prefix-list",
 					"name": "keyword.control.ip-prefix-list.cisco"
+				},
+				{
+					"match": "^ip dhcp snooping",
+					"name": "keyword.control.dhcp-snooping.cisco"
+				},
+				{
+					"match": "^ip arp inspection",
+					"name": "keyword.control.dai.cisco"
+				},
+				{
+					"match": "ip ssh",
+					"name": "keyword.control.type.ip-ssh.cisco"
+				},
+				{
+					"match": "^(ip domain)\\s+name\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "keyword.control.type.ip-domain.cisco"
+						},
+						"2": {
+							"name": "variable.domain-name.cisco"
+						}
+					}
+				},
+				{
+					"match": "^ip name-server",
+					"name": "keyword.control.ip-name-servers.cisco"
 				}
 			]
 		},
-		"top-level-commands-layer2": {
+		"ip-access-list": {
+			"patterns": [
+				{
+					"match": "(?i)(ip access-list)\\s+(standard|extended)\\s+([0-9a-z\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.ip-access-list"
+						},
+						"3": {
+							"name": "variable.acl.name"
+						}
+					}
+				}
+			]
+		},
+		"router": {
+			"patterns": [
+				{
+					"match": "^(?i)(router)\\s+(ospf|eigrp|rip|bgp)\\s+([0-9]+)$",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.router.cisco"
+						},
+						"3": {
+							"name": "variable.router.autonomous-system"
+						}
+					}
+				}
+			]
+		},
+		"vrf": {
+			"patterns": [
+				{
+					"match": "^(?i)(vrf)\\s+(definition)\\s+([0-9a-z\\-_]+)$",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.router-vrf"
+						},
+						"3": {
+							"name": "variable.vrf.name"
+						}
+					}
+				}
+			]
+		},
+		"policy-map": {
+			"patterns": [
+				{
+					"match": "^(policy-map)\\s+(type control subscriber)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.policy-map.cisco"
+						},
+						"3": {
+							"name": "variable.policy-map.name"
+						}
+					}
+				},
+				{
+					"match": "^(policy-map)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.policy-map.cisco"
+						},
+						"2": {
+							"name": "variable.policy-map.name"
+						}
+					}
+				}
+			]
+		},
+		"class-map": {
+			"patterns": [
+				{
+					"match": "^(class-map)\\s+(match-all|match-any)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.class-map"
+						},
+						"3": {
+							"name": "variable.class-map.name"
+						}
+					}
+				},
+				{
+					"match": "^(class-map)\\s+(type control subscriber)\\s+(match-all|match-any)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.class-map"
+						},
+						"4": {
+							"name": "variable.class-map.name"
+						}
+					}
+				}
+			]
+		},
+		"service-template": {
+			"patterns": [
+				{
+					"match": "^(?i)(service-template)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.service-template"
+						},
+						"2": {
+							"name": "variable.service-template.name"
+						}
+					}
+				}
+			]
+		},
+		"interface": {
+			"patterns": [
+				{
+					"match": "^(interface|int)",
+					"name": "entity.name.type.context.interface.cisco"
+				}
+			]
+		},
+		"flow": {
+			"patterns": [
+				{
+					"match": "^flow (record|exporter|monitor)",
+					"name": "entity.name.type.context.netflow.cisco"
+				}
+			]
+		},
+		"line": {
+			"patterns": [
+				{
+					"match": "^line (con|vty|aux)",
+					"name": "entity.name.type.context.lines.cisco"
+				}
+			]
+		},
+		"control-plane": {
+			"patterns": [
+				{
+					"match": "^control-plane",
+					"name": "entity.name.type.context.control-plane.cisco"
+				}
+			]
+		},
+		"vlan": {
+			"patterns": [
+				{
+					"match": "^(vlan)",
+					"name": "entity.name.type.context.vlan.cisco"
+				}
+			]
+		},
+		"archive": {
+			"patterns": [
+				{
+					"match": "^archive",
+					"name": "entity.name.type.context.archive.cisco"
+				}
+			]
+		},
+		"spanning-tree": {
 			"patterns": [
 				{
 					"match": "^(?i)(spanning-tree)",
@@ -446,7 +540,105 @@
 				}
 			]
 		},
-		"top-level-commands-services": {
+		"username": {
+			"patterns": [
+				{
+					"match": "^(?i)(username)\\s+([a-z0-9\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.auth.username"
+						},
+						"2": {
+							"name": "variable.auth.username"
+						}
+					}
+				},
+				{
+					"match": "^username",
+					"name": "keyword.control.auth.username"
+				}
+			]
+		},
+		"enable": {
+			"patterns": [
+				{
+					"match": "^enable secret",
+					"name": "keyword.control.auth.enable-secret"
+				}
+			]
+		},
+		"hostname": {
+			"patterns": [
+				{
+					"match": "^(?i)(hostname)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.hostname"
+						}
+					}
+				}
+			]
+		},
+		"banner": {
+			"patterns": [
+				{
+					"begin": "^\\s*(banner\\s+(?:login|exec|motd))\\s+(\\S)$",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword.control.type.banner.cisco-iosxe"
+						},
+						"2": {
+							"name": "punctuation.definition.banner-delimiter.cisco-iosxe"
+						}
+					},
+					"end": "^(\\2).*\n$",
+					"name": "string.unquoted.banner.cisco-iosxe"
+				}
+			]
+		},
+		"ntp": {
+			"patterns": [
+				{
+					"match": "^ntp",
+					"name": "keyword.control.ntp.cisco"
+				}
+			]
+		},
+		"snmp": {
+			"patterns": []
+		},
+		"snmp-server": {
+			"patterns": [
+				{
+					"match": "^snmp-server",
+					"name": "keyword.control.snmp-server.cisco"
+				}
+			]
+		},
+		"crypto": {
+			"patterns": [
+				{
+					"match": "^(crypto key generate) rsa modulus ([0-9]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.crypto-key-generate.cisco"
+						},
+						"2": {
+							"name": "variable.modulus-size.cisco"
+						}
+					}
+				}
+			]
+		},
+		"logging": {
+			"patterns": [
+				{
+					"match": "logging (buffered|console|monitor|host|source-interface)",
+					"name": "keyword.control.logging"
+				}
+			]
+		},
+		"service": {
 			"patterns": [
 				{
 					"match": "^(service)(?!-)",
@@ -454,31 +646,90 @@
 				}
 			]
 		},
-		"globals-interfaces": {
+		"errdisable": {
 			"patterns": [
 				{
-					"match": "(?i)(loopback|lo)[0-9]+",
-					"name": "variable.interfaces.loopback"
+					"match": "^errdisable\\s+recovery",
+					"name": "keyword.control.errdisable-recovery"
+				}
+			]
+		},
+		"device": {
+			"patterns": [
+				{
+					"match": "^device\\s+classifier",
+					"name": "keyword.control.device-classifier"
+				}
+			]
+		},
+		"device-sensor": {
+			"patterns": [
+				{
+					"match": "^(?i)(device-sensor)(.*list\\s+)([a-z0-9\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.device-sensor"
+						},
+						"3": {
+							"name": "variable.filter-list.name"
+						}
+					}
 				},
 				{
-					"match": "(?i)vlan[0-9]+",
-					"name": "variable.interfaces.svi"
+					"match": "^(?i)device-sensor",
+					"name": "keyword.control.device-sensor"
+				}
+			]
+		},
+		"access-session": {
+			"patterns": [
+				{
+					"match": "^(?i)(access-session\\s+attributes)(.*list\\s+)([a-z0-9\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.access-session-atttributes"
+						},
+						"3": {
+							"name": "variable.access-session-attributes.list-name"
+						}
+					}
 				},
 				{
-					"match": "(?i)(port-channel[0-9]+|po[0-9]+)",
-					"name": "variable.interfaces.link-agg"
-				},
+					"match": "^(?i)(access-session)\\s(authentication|accounting)",
+					"name": "keyword.control.access-session"
+				}
+			]
+		},
+		"device-tracking": {
+			"patterns": [
 				{
-					"match": "(?i)([a-z]*gigabitethernet)([0-9/]+)($|\\.[0-9]+)",
-					"name": "variable.interfaces.physical.full-name"
-				},
+					"match": "^(?i)(device-tracking)\\s+(policy)\\s+([a-z0-9\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.device-tracking-policy"
+						},
+						"3": {
+							"name": "variable.device-tracking-policy.name"
+						}
+					}
+				}
+			]
+		},
+		"description": {
+			"patterns": [
 				{
-					"match": "(?i)(g|gi|te|ten|twe|fo|hun)([0-9/]+)($|\\.[0-9]+)",
-					"name": "variable.interfaces.physical.short-name"
-				},
-				{
-					"match": "(?i)(tunnel|tun)[0-9]+",
-					"name": "variable.interfaces.tunnel"
+					"begin": "^\\s+(?i)(description)\\s+",
+	
+					"end": "$",
+					"patterns": [
+						{
+							"include": "#jinja2"
+						},
+						{
+							"match": "[^{}]+",
+							"name": "string.description.cisco"
+						}
+					]
 				}
 			]
 		}
