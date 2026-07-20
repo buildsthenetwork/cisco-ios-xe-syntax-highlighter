@@ -52,11 +52,26 @@
 				{
 					"include": "#service-template"
 				},
-
-
-
 				{
-					"include": "#top-level-contexts"
+					"include": "#interface"
+				},
+				{
+					"include": "#flow"
+				},
+				{
+					"include": "#line"
+				},
+				{
+					"include": "#control-plane"
+				},
+				{
+					"include": "#vlan"
+				},
+				{
+					"include": "#archive"
+				},
+				{
+					"include": "#spanning-tree"
 				},
 				{
 					"include": "#top-level-commands"
@@ -120,6 +135,10 @@
 		},
 		"aaa": {
 			"patterns": [
+				{
+					"match": "^aaa new-model",
+					"name": "keyword.control.auth.aaa-new-model"
+				},
 				{
 					"match": "^(?i)(aaa group server)\\s+(radius|tacacs\\+)\\s([0-9a-z\\-_]+)",
 					"captures": {
@@ -297,29 +316,40 @@
 				}
 			]
 		},
-
-		"top-level-contexts": {
+		"interface": {
 			"patterns": [
-				{
-					"include": "#top-level-commands-layer2"
-				},
-
 				{
 					"match": "^(interface|int)",
 					"name": "entity.name.type.interface.cisco"
-				},
-				{
-					"match": "^control-plane",
-					"name": "entity.name.type.control-plane.cisco"
-				},
+				}
+			]
+		},
+		"flow": {
+			"patterns": [
 				{
 					"match": "^flow (record|exporter|monitor)",
 					"name": "entity.name.type.netflow.cisco"
-				},
+				}
+			]
+		},
+		"line": {
+			"patterns": [
 				{
 					"match": "^line (con|vty|aux)",
 					"name": "entity.name.type.lines.cisco"
-				},
+				}
+			]
+		},
+		"control-plane": {
+			"patterns": [
+				{
+					"match": "^control-plane",
+					"name": "entity.name.type.control-plane.cisco"
+				}
+			]
+		},
+		"vlan": {
+			"patterns": [
 				{
 					"match": "^(vlan) ([0-9]{1,4})",
 					"captures": {
@@ -330,14 +360,25 @@
 							"name": "variable.vlan-id.cisco"
 						}
 					}
-				},
+				}
+			]
+		},
+		"archive": {
+			"patterns": [
 				{
 					"match": "^archive",
 					"name": "entity.name.type.archive.cisco"
 				}
 			]
 		},
-
+		"spanning-tree": {
+			"patterns": [
+				{
+					"match": "^(?i)(spanning-tree)",
+					"name": "keyword.control.spanning-tree.cisco"
+				}
+			]
+		},
 		"top-level-commands": {
 			"patterns": [
 				{
@@ -427,10 +468,6 @@
 		"top-level-commands-auth": {
 			"patterns": [
 				{
-					"match": "^aaa new-model",
-					"name": "keyword.control.auth.aaa-new-model"
-				},
-				{
 					"match": "^(username) ([a-zA-Z]+)",
 					"captures": {
 						"1": {
@@ -502,14 +539,6 @@
 				{
 					"match": "^ip prefix-list",
 					"name": "keyword.control.ip-prefix-list.cisco"
-				}
-			]
-		},
-		"top-level-commands-layer2": {
-			"patterns": [
-				{
-					"match": "^(?i)(spanning-tree)",
-					"name": "keyword.control.spanning-tree.cisco"
 				}
 			]
 		},
