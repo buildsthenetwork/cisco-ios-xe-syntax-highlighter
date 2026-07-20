@@ -76,7 +76,9 @@
 				{
 					"include": "#username"
 				},
-
+				{
+					"include": "#enable"
+				},
 
 				{
 					"include": "#top-level-commands"
@@ -171,6 +173,10 @@
 		"radius": {
 			"patterns": [
 				{
+					"match": "^radius-server",
+					"name": "keyword.control.auth.radius"
+				},
+				{
 					"match": "^(?i)(radius server) ([a-z0-9-_]+)",
 					"captures": {
 						"1": {
@@ -217,6 +223,10 @@
 			"patterns": [
 				{
 					"include": "#ip-access-list"
+				},
+				{
+					"match": "^ip radius",
+					"name": "keyword.control.auth.radius.source-interface"
 				}
 			]
 		},
@@ -410,11 +420,17 @@
 				}
 			]
 		},
-		"top-level-commands": {
+		"enable": {
 			"patterns": [
 				{
-					"include": "#top-level-commands-auth"
-				},
+					"match": "^enable secret",
+					"name": "keyword.control.auth.enable-secret"
+				}
+			]
+		},
+		"top-level-commands": {
+			"patterns": [
+
 				{
 					"include": "#top-level-commands-logging"
 				},
@@ -496,24 +512,7 @@
 				}
 			]
 		},
-		"top-level-commands-auth": {
-			"patterns": [
 
-
-				{
-					"match": "^radius-server",
-					"name": "keyword.control.auth.radius"
-				},
-				{
-					"match": "^ip radius",
-					"name": "keyword.control.auth.radius.source-interface"
-				},
-				{
-					"match": "^enable secret",
-					"name": "keyword.control.auth.enable-secret"
-				}
-			]
-		},
 		"top-level-commands-logging": {
 			"patterns": [
 				{
