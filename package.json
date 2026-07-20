@@ -46,7 +46,10 @@
         "extensions": [
           ".ios",
           ".iosxe",
-          ".cisco"
+          ".cisco",
+          ".iosj2",
+          ".iosxej2",
+          ".ciscoj2"
         ],
         "configuration": "./language-configuration.json"
       }
