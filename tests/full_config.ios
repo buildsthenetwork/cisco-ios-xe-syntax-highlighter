@@ -75,6 +75,9 @@ archive
 ! TODO access control or policy enforcement?
 username netadmin privilege 15 secret 9 $9$EXAMPLE_HASH_REDACTED
 username opsuser privilege 5 secret 9 $9$EXAMPLE_HASH_REDACTED
+username ADMIN privilege 15 secret 9 $9$EXAMPLE_HASH_REDACTED
+username SUPER-ADMIN privilege 15 secret 9 $9$EXAMPLE_HASH_REDACTED
+username SUPER-ADMIN-2 secret 9 $9$EXAMPLE_HASH_REDACTED
 !
 !
 aaa new-model

@@ -102,6 +102,21 @@
 				},
 				{
 					"include": "#crypto"
+				},
+				{
+					"include": "#errdisable"
+				},
+				{
+					"include": "#device"
+				},
+				{
+					"include": "#device-sensor"
+				},
+				{
+					"include": "#access-session"
+				},
+				{
+					"include": "#device-tracking"
 				}
 
 
@@ -218,6 +233,10 @@
 							"name": "variable.aaa.server.name"
 						}
 					}
+				},
+				{
+					"match": "^(?i)aaa server",
+					"name": "keyword.control.aaa-server"
 				}
 			]
 		},
@@ -507,7 +526,7 @@
 		"username": {
 			"patterns": [
 				{
-					"match": "^(username) ([a-zA-Z]+)",
+					"match": "^(?i)(username)\\s+([a-z0-9\\-_]+)",
 					"captures": {
 						"1": {
 							"name": "keyword.control.auth.username"
@@ -593,7 +612,6 @@
 				}
 			]
 		},
-	
 		"logging": {
 			"patterns": [
 				{
@@ -607,6 +625,75 @@
 				{
 					"match": "^(service)(?!-)",
 					"name": "keyword.control.service"
+				}
+			]
+		},
+		"errdisable": {
+			"patterns": [
+				{
+					"match": "^errdisable\\s+recovery",
+					"name": "keyword.control.errdisable-recovery"
+				}
+			]
+		},
+		"device": {
+			"patterns": [
+				{
+					"match": "^device\\s+classifier",
+					"name": "keyword.control.device-classifier"
+				}
+			]
+		},
+		"device-sensor": {
+			"patterns": [
+				{
+					"match": "^(?i)(device-sensor)(.*list\\s+)([a-z0-9\\-_]+)",
+					"captures":{
+						"1": {
+							"name": "keyword.control.device-sensor"
+						},
+						"3": {
+							"name": "variable.filter-list.name"
+						}
+					}
+				},
+				{
+					"match": "^(?i)device-sensor",
+					"name": "keyword.control.device-sensor"
+				}
+			]
+		},
+		"access-session": {
+			"patterns": [
+				{
+					"match": "^(?i)(access-session\\s+attributes)(.*list\\s+)([a-z0-9\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.access-session-atttributes"
+						},
+						"3": {
+							"name": "variable.access-session-attributes.list-name"
+						}
+					}
+				},
+				{
+					"match": "^(?i)(access-session)\\s(authentication|accounting)",
+					"name": "keyword.control.access-session"
+				}
+			]
+		},
+		"device-tracking": {
+			"patterns": [
+				{
+					"match": "^(?i)(device-tracking)\\s+(policy)\\s+([a-z0-9\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.device-tracking-policy"
+						},
+						"3": {
+							"name": "variable.device-tracking-policy.name"
+						}
+					}
 				}
 			]
 		}
