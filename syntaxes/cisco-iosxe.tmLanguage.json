@@ -79,7 +79,9 @@
 				{
 					"include": "#enable"
 				},
-
+				{
+					"include": "#logging"
+				},
 				{
 					"include": "#top-level-commands"
 				},
@@ -227,6 +229,33 @@
 				{
 					"match": "^ip radius",
 					"name": "keyword.control.auth.radius.source-interface"
+				},
+				{
+					"match": "ip routing",
+					"name": "keyword.control.ip-routing"
+				},
+				{
+					"match": "ip cef",
+					"name": "keyword.control.ip-cef"
+				},
+				{
+					"match": "^(ip route) vrf ([a-zA-Z]+)\\s",
+					"captures": {
+						"1": {
+							"name": "keyword.control.ip-route-vrf.cisco"
+						},
+						"2": {
+							"name": "variable.ip-route.vrf.cisco"
+						}
+					}
+				},
+				{
+					"match": "^ip route",
+					"name": "keyword.control.ip-route.cisco"
+				},
+				{
+					"match": "^ip prefix-list",
+					"name": "keyword.control.ip-prefix-list.cisco"
 				}
 			]
 		},
@@ -430,13 +459,7 @@
 		},
 		"top-level-commands": {
 			"patterns": [
-
-				{
-					"include": "#top-level-commands-logging"
-				},
-				{
-					"include": "#top-level-commands-routing"
-				},
+	
 				{
 					"include": "#top-level-commands-services"
 				},
@@ -512,8 +535,7 @@
 				}
 			]
 		},
-
-		"top-level-commands-logging": {
+		"logging": {
 			"patterns": [
 				{
 					"match": "logging (buffered|console|monitor|host|source-interface)",
@@ -521,37 +543,7 @@
 				}
 			]
 		},
-		"top-level-commands-routing": {
-			"patterns": [
-				{
-					"match": "ip routing",
-					"name": "keyword.control.ip-routing"
-				},
-				{
-					"match": "ip cef",
-					"name": "keyword.control.ip-cef"
-				},
-				{
-					"match": "^(ip route) vrf ([a-zA-Z]+)\\s",
-					"captures": {
-						"1": {
-							"name": "keyword.control.ip-route-vrf.cisco"
-						},
-						"2": {
-							"name": "variable.ip-route.vrf.cisco"
-						}
-					}
-				},
-				{
-					"match": "^ip route",
-					"name": "keyword.control.ip-route.cisco"
-				},
-				{
-					"match": "^ip prefix-list",
-					"name": "keyword.control.ip-prefix-list.cisco"
-				}
-			]
-		},
+
 		"top-level-commands-services": {
 			"patterns": [
 				{
