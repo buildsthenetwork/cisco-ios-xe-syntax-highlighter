@@ -204,7 +204,7 @@
 					"match": "^(?i)(aaa group server)\\s+(radius|tacacs\\+)\\s([0-9a-z\\-_]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.aaa.server"
+							"name": "entity.name.type.context.aaa.server"
 						},
 						"3": {
 							"name": "variable.aaa.server.name"
@@ -223,7 +223,7 @@
 					"match": "^(?i)(radius server) ([a-z0-9-_]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.aaa.server-type"
+							"name": "entity.name.type.context.aaa.radius"
 						},
 						"2": {
 							"name": "variable.aaa.server.name"
@@ -238,7 +238,7 @@
 					"match": "^(?i)(tacacs server) ([a-z0-9-_]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.aaa.server-type"
+							"name": "entity.name.type.context.aaa.tacacs"
 						},
 						"2": {
 							"name": "variable.aaa.server.name"
@@ -253,7 +253,7 @@
 					"match": "^(?i)(access-list)\\s+([0-9]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.access-list"
+							"name": "entity.name.type.context.access-list"
 						},
 						"2": {
 							"name": "variable.acl.number"
@@ -333,7 +333,7 @@
 					"match": "(?i)(ip access-list)\\s+(standard|extended)\\s+([0-9a-z\\-_]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.ip-access-list"
+							"name": "entity.name.type.context.ip-access-list"
 						},
 						"3": {
 							"name": "variable.acl.name"
@@ -348,7 +348,7 @@
 					"match": "^(?i)(router)\\s+(ospf|eigrp|rip|bgp)\\s+([0-9]+)$",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.router.cisco"
+							"name": "entity.name.type.context.router.cisco"
 						},
 						"3": {
 							"name": "variable.router.autonomous-system"
@@ -363,7 +363,7 @@
 					"match": "^(?i)(vrf)\\s+(definition)\\s+([0-9a-z\\-_]+)$",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.router-vrf"
+							"name": "entity.name.type.context.router-vrf"
 						},
 						"3": {
 							"name": "variable.vrf.name"
@@ -378,7 +378,7 @@
 					"match": "^(policy-map)\\s+(type control subscriber)\\s+(.*)\\b",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.policy-map.cisco"
+							"name": "entity.name.type.context.policy-map.cisco"
 						},
 						"3": {
 							"name": "variable.policy-map.name"
@@ -389,7 +389,7 @@
 					"match": "^(policy-map)\\s+(.*)\\b",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.policy-map.cisco"
+							"name": "entity.name.type.context.policy-map.cisco"
 						},
 						"2": {
 							"name": "variable.policy-map.name"
@@ -404,7 +404,7 @@
 					"match": "^(class-map)\\s+(match-all|match-any)\\s+(.*)\\b",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.class-map"
+							"name": "entity.name.type.context.class-map"
 						},
 						"3": {
 							"name": "variable.class-map.name"
@@ -415,7 +415,7 @@
 					"match": "^(class-map)\\s+(type control subscriber)\\s+(match-all|match-any)\\s+(.*)\\b",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.class-map"
+							"name": "entity.name.type.context.class-map"
 						},
 						"4": {
 							"name": "variable.class-map.name"
@@ -430,7 +430,7 @@
 					"match": "^(?i)(service-template)\\s+(.*)\\b",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.service-template"
+							"name": "entity.name.type.context.service-template"
 						},
 						"2": {
 							"name": "variable.service-template.name"
@@ -443,7 +443,7 @@
 			"patterns": [
 				{
 					"match": "^(interface|int)",
-					"name": "entity.name.type.interface.cisco"
+					"name": "entity.name.type.context.interface.cisco"
 				}
 			]
 		},
@@ -451,7 +451,7 @@
 			"patterns": [
 				{
 					"match": "^flow (record|exporter|monitor)",
-					"name": "entity.name.type.netflow.cisco"
+					"name": "entity.name.type.context.netflow.cisco"
 				}
 			]
 		},
@@ -459,7 +459,7 @@
 			"patterns": [
 				{
 					"match": "^line (con|vty|aux)",
-					"name": "entity.name.type.lines.cisco"
+					"name": "entity.name.type.context.lines.cisco"
 				}
 			]
 		},
@@ -467,7 +467,7 @@
 			"patterns": [
 				{
 					"match": "^control-plane",
-					"name": "entity.name.type.control-plane.cisco"
+					"name": "entity.name.type.context.control-plane.cisco"
 				}
 			]
 		},
@@ -477,7 +477,7 @@
 					"match": "^(vlan) ([0-9]{1,4})",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.vlan.cisco"
+							"name": "entity.name.type.context.vlan.cisco"
 						},
 						"2": {
 							"name": "variable.vlan-id.cisco"
@@ -490,7 +490,7 @@
 			"patterns": [
 				{
 					"match": "^archive",
-					"name": "entity.name.type.archive.cisco"
+					"name": "entity.name.type.context.archive.cisco"
 				}
 			]
 		},
