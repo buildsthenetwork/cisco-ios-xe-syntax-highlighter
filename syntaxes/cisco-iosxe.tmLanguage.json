@@ -3,10 +3,10 @@
 	"scopeName": "source.cisco-iosxe",
 	"patterns": [
 		{
-			"include": "#global-configs"
+			"include": "#jinja2"
 		},
 		{
-			"include": "#top-level"
+			"include": "#global-configs"
 		},
 		{
 			"include": "#keywords"
@@ -15,9 +15,6 @@
 	"repository": {
 		"global-configs": {
 			"patterns": [
-				{
-					"include": "#jinja2"
-				},
 				{
 					"match": "^\\s*!.*$",
 					"name": "comment.line.exclamation.cisco"
@@ -117,9 +114,10 @@
 				},
 				{
 					"include": "#device-tracking"
+				},
+				{
+					"include": "#description"
 				}
-
-
 			]
 		},
 		"jinja2": {
@@ -133,12 +131,12 @@
 					}
 				},
 				{
-					"match": "{{\\s.*\\s}}",
+					"match": "{{\\s[a-z0-9\\.\\-_]+\\s}}",
 					"name": "variable.jinja2"
 				},
 				{
 					"match": "{%\\s.*\\s%}",
-					"name": "entity.name.type.jinja2"
+					"name": "keyword.jinja2"
 				}
 			]
 		},
@@ -168,7 +166,7 @@
 					"match": "(?i)^\\s*(no|shut|shutdown)\\b",
 					"name": "keyword.control.negation.cisco"
 				},
-								{
+				{
 					"match": "(?i)(loopback|lo)[0-9]+",
 					"name": "variable.interfaces.loopback"
 				},
@@ -197,12 +195,20 @@
 					"name": "constant.numeric.ip-address.cisco"
 				},
 				{
-					"match": "(description)(.*\\n)",
-					"captures": {
-						"2": {
-							"name": "string.unquoted.banner.cisco-iosxe"
-						}
-					}
+					"match": "^(conf|configure) (t|term|terminal|conf|confirm)",
+					"name": "keyword.configure"
+				},
+				{
+					"match": "^(copy)",
+					"name": "keyword.copy"
+				},
+				{
+					"match": "^end",
+					"name": "keyword.control.end"
+				},
+				{
+					"match": "^(write|wr) (memory|mem)",
+					"name": "keyword.write"
 				}
 			]
 		},
@@ -213,7 +219,7 @@
 					"name": "keyword.control.auth.aaa-new-model"
 				},
 				{
-					"match": "^(aaa (?:authentication|authorization|accounting)).*group ([0-9a-zA-Z\\-_]+)",
+					"match": "^(aaa (?:authentication|authorization|accounting)).*group\\s+([0-9a-zA-Z\\-_]+)",
 					"captures": {
 						"1": {
 							"name": "keyword.control.auth.aaa"
@@ -237,6 +243,14 @@
 				{
 					"match": "^(?i)aaa server",
 					"name": "keyword.control.aaa-server"
+				},
+				{
+					"match": "^(?i)aaa session-id",
+					"name": "keyword.control.aaa-session-id"
+				},
+				{
+					"match": "^(?i)aaa (authorization|accounting)",
+					"name": "keyword.control.aaa"
 				}
 			]
 		},
@@ -262,7 +276,7 @@
 		"tacacs": {
 			"patterns": [
 				{
-					"match": "^(?i)(tacacs server) ([a-z0-9-_]+)",
+					"match": "^(?i)(tacacs\\s+server) ([a-z0-9-_]+)",
 					"captures": {
 						"1": {
 							"name": "entity.name.type.context.aaa.tacacs"
@@ -271,6 +285,10 @@
 							"name": "variable.aaa.server.name"
 						}
 					}
+				},
+				{
+					"match": "^(?i)tacacs-server",
+					"name": "keyword.control.tacacs-server"
 				}
 			]
 		},
@@ -503,7 +521,6 @@
 				{
 					"match": "^(vlan)",
 					"name": "entity.name.type.context.vlan.cisco"
-
 				}
 			]
 		},
@@ -535,6 +552,10 @@
 							"name": "variable.auth.username"
 						}
 					}
+				},
+				{
+					"match": "^username",
+					"name": "keyword.control.auth.username"
 				}
 			]
 		},
@@ -549,13 +570,10 @@
 		"hostname": {
 			"patterns": [
 				{
-					"match": "^(?i)(hostname)\\s+([0-9a-z\\-_]+)$",
+					"match": "^(?i)(hostname)",
 					"captures": {
 						"1": {
 							"name": "keyword.control.hostname"
-						},
-						"2": {
-							"name": "variable.hostname"
 						}
 					}
 				}
@@ -648,7 +666,7 @@
 			"patterns": [
 				{
 					"match": "^(?i)(device-sensor)(.*list\\s+)([a-z0-9\\-_]+)",
-					"captures":{
+					"captures": {
 						"1": {
 							"name": "keyword.control.device-sensor"
 						},
@@ -694,6 +712,24 @@
 							"name": "variable.device-tracking-policy.name"
 						}
 					}
+				}
+			]
+		},
+		"description": {
+			"patterns": [
+				{
+					"begin": "^\\s+(?i)(description)\\s+",
+	
+					"end": "$",
+					"patterns": [
+						{
+							"include": "#jinja2"
+						},
+						{
+							"match": "[^{}]+",
+							"name": "string.description.cisco"
+						}
+					]
 				}
 			]
 		}

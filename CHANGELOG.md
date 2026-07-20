@@ -14,10 +14,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - v0.2.1 Added highlighting for device-tracker.
 - v0.2.1 Added highlighting for access-session.
 - v0.2.1 Added highlighting for aaa server.
+- v0.2.1 Added highlighting for copy.
+- v0.2.1 Added highlighting for write memory.
+- v0.2.1 Added highlighting for configure commands.
 
 ### Fixed
 - v0.2.1 Removed highlighting of vlan-id from vlan context.
 - v0.2.1 Fixed username patterns that were not being caught.
+- v0.2.1 Fixed bug where some aaa commands wouldn't highlight.
+- v0.2.1 Fixed highlighting for hostnames where jinja2 was present.
+- v0.2.1 Fixed bug where jinja2 would be highlighted when preceded by description.
 
 ## [0.2.0] - 2026-07-20
 
