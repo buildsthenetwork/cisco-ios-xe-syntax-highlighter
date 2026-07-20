@@ -83,23 +83,28 @@
 					"include": "#logging"
 				},
 				{
-					"include": "#top-level-commands"
+					"include": "#service"
 				},
 				{
-					"include": "#global-configs-interfaces"
+					"include": "#hostname"
 				},
 				{
-					"match": "\\b(?:(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\.){3}(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\b",
-					"name": "constant.numeric.ip-address.cisco"
+					"include": "#banner"
 				},
 				{
-					"match": "(description)(.*\\n)",
-					"captures": {
-						"2": {
-							"name": "string.unquoted.banner.cisco-iosxe"
-						}
-					}
+					"include": "#ntp"
+				},
+				{
+					"include": "#snmp"
+				},
+				{
+					"include": "#snmp-server"
+				},
+				{
+					"include": "#crypto"
 				}
+
+
 			]
 		},
 		"jinja2": {
@@ -139,6 +144,42 @@
 				{
 					"match": "(?i)^\\s*(no|shut|shutdown)\\b",
 					"name": "keyword.control.negation.cisco"
+				},
+								{
+					"match": "(?i)(loopback|lo)[0-9]+",
+					"name": "variable.interfaces.loopback"
+				},
+				{
+					"match": "(?i)vlan[0-9]+",
+					"name": "variable.interfaces.svi"
+				},
+				{
+					"match": "(?i)(port-channel[0-9]+|po[0-9]+)",
+					"name": "variable.interfaces.link-agg"
+				},
+				{
+					"match": "(?i)([a-z]*gigabitethernet)([0-9/]+)($|\\.[0-9]+)",
+					"name": "variable.interfaces.physical.full-name"
+				},
+				{
+					"match": "(?i)(g|gi|te|ten|twe|fo|hun)([0-9/]+)($|\\.[0-9]+)",
+					"name": "variable.interfaces.physical.short-name"
+				},
+				{
+					"match": "(?i)(tunnel|tun)[0-9]+",
+					"name": "variable.interfaces.tunnel"
+				},
+				{
+					"match": "\\b(?:(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\.){3}(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\b",
+					"name": "constant.numeric.ip-address.cisco"
+				},
+				{
+					"match": "(description)(.*\\n)",
+					"captures": {
+						"2": {
+							"name": "string.unquoted.banner.cisco-iosxe"
+						}
+					}
 				}
 			]
 		},
@@ -256,6 +297,33 @@
 				{
 					"match": "^ip prefix-list",
 					"name": "keyword.control.ip-prefix-list.cisco"
+				},
+				{
+					"match": "^ip dhcp snooping",
+					"name": "keyword.control.dhcp-snooping.cisco"
+				},
+				{
+					"match": "^ip arp inspection",
+					"name": "keyword.control.dai.cisco"
+				},
+				{
+					"match": "ip ssh",
+					"name": "keyword.control.type.ip-ssh.cisco"
+				},
+				{
+					"match": "^(ip domain)\\s+name\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "keyword.control.type.ip-domain.cisco"
+						},
+						"2": {
+							"name": "variable.domain-name.cisco"
+						}
+					}
+				},
+				{
+					"match": "^ip name-server",
+					"name": "keyword.control.ip-name-servers.cisco"
 				}
 			]
 		},
@@ -457,12 +525,8 @@
 				}
 			]
 		},
-		"top-level-commands": {
+		"hostname": {
 			"patterns": [
-	
-				{
-					"include": "#top-level-commands-services"
-				},
 				{
 					"match": "^(?i)(hostname)\\s+([0-9a-z\\-_]+)$",
 					"captures": {
@@ -473,7 +537,11 @@
 							"name": "variable.hostname"
 						}
 					}
-				},
+				}
+			]
+		},
+		"banner": {
+			"patterns": [
 				{
 					"begin": "^\\s*(banner\\s+(?:login|exec|motd))\\s+(\\S)$",
 					"beginCaptures": {
@@ -486,23 +554,30 @@
 					},
 					"end": "^(\\2).*\n$",
 					"name": "string.unquoted.banner.cisco-iosxe"
-				},
+				}
+			]
+		},
+		"ntp": {
+			"patterns": [
 				{
 					"match": "^ntp",
 					"name": "keyword.control.ntp.cisco"
-				},
-				{
-					"match": "^ip dhcp snooping",
-					"name": "keyword.control.dhcp-snooping.cisco"
-				},
-				{
-					"match": "^ip arp inspection",
-					"name": "keyword.control.dai.cisco"
-				},
+				}
+			]
+		},
+		"snmp": {
+			"patterns": []
+		},
+		"snmp-server": {
+			"patterns": [
 				{
 					"match": "^snmp-server",
 					"name": "keyword.control.snmp-server.cisco"
-				},
+				}
+			]
+		},
+		"crypto": {
+			"patterns": [
 				{
 					"match": "^(crypto key generate) rsa modulus ([0-9]+)",
 					"captures": {
@@ -513,28 +588,10 @@
 							"name": "variable.modulus-size.cisco"
 						}
 					}
-				},
-				{
-					"match": "ip ssh",
-					"name": "keyword.control.type.ip-ssh.cisco"
-				},
-				{
-					"match": "^(ip domain)\\s+name\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "keyword.control.type.ip-domain.cisco"
-						},
-						"2": {
-							"name": "variable.domain-name.cisco"
-						}
-					}
-				},
-				{
-					"match": "^ip name-server",
-					"name": "keyword.control.ip-name-servers.cisco"
 				}
 			]
 		},
+	
 		"logging": {
 			"patterns": [
 				{
@@ -543,40 +600,11 @@
 				}
 			]
 		},
-
-		"top-level-commands-services": {
+		"service": {
 			"patterns": [
 				{
 					"match": "^(service)(?!-)",
 					"name": "keyword.control.service"
-				}
-			]
-		},
-		"global-configs-interfaces": {
-			"patterns": [
-				{
-					"match": "(?i)(loopback|lo)[0-9]+",
-					"name": "variable.interfaces.loopback"
-				},
-				{
-					"match": "(?i)vlan[0-9]+",
-					"name": "variable.interfaces.svi"
-				},
-				{
-					"match": "(?i)(port-channel[0-9]+|po[0-9]+)",
-					"name": "variable.interfaces.link-agg"
-				},
-				{
-					"match": "(?i)([a-z]*gigabitethernet)([0-9/]+)($|\\.[0-9]+)",
-					"name": "variable.interfaces.physical.full-name"
-				},
-				{
-					"match": "(?i)(g|gi|te|ten|twe|fo|hun)([0-9/]+)($|\\.[0-9]+)",
-					"name": "variable.interfaces.physical.short-name"
-				},
-				{
-					"match": "(?i)(tunnel|tun)[0-9]+",
-					"name": "variable.interfaces.tunnel"
 				}
 			]
 		}
