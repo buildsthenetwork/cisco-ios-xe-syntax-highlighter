@@ -31,7 +31,12 @@
 				{
 					"include": "#tacacs"
 				},
-
+				{
+					"include": "#access-list"
+				},
+				{
+					"include": "#ip"
+				},
 
 
 
@@ -87,8 +92,7 @@
 				},
 				{
 					"match": "(remark)\\s+(.*)$",
-					
-					"captures":{
+					"captures": {
 						"2": {
 							"name": "string.unquoted.acl.remark"
 						}
@@ -145,14 +149,46 @@
 				}
 			]
 		},
-		"top-level-contexts": {
+		"access-list": {
 			"patterns": [
 				{
-					"include": "#top-level-contexts-auth"
-				},
+					"match": "^(?i)(access-list)\\s+([0-9]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.access-list"
+						},
+						"2": {
+							"name": "variable.acl.number"
+						}
+					}
+				}
+			]
+		},
+		"ip": {
+			"patterns": [
 				{
-					"include": "#top-level-contexts-acl"
-				},
+					"include": "#ip-access-list"
+				}
+			]
+		},
+		"ip-access-list": {
+			"patterns": [
+				{
+					"match": "(?i)(ip access-list)\\s+(standard|extended)\\s+([0-9a-z\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.ip-access-list"
+						},
+						"3": {
+							"name": "variable.acl.name"
+						}
+					}
+				}
+			]
+		},
+		"top-level-contexts": {
+			"patterns": [
+
 				{
 					"include": "#top-level-commands-layer2"
 				},
@@ -178,7 +214,6 @@
 					"match": "^line (con|vty|aux)",
 					"name": "entity.name.type.lines.cisco"
 				},
-
 				{
 					"match": "^(vlan) ([0-9]{1,4})",
 					"captures": {
@@ -196,38 +231,7 @@
 				}
 			]
 		},
-		"top-level-contexts-auth": {
-			"patterns": [
 
-
-			]
-		},
-		"top-level-contexts-acl": {
-			"patterns": [
-				{
-					"match": "^(?i)(access-list)\\s+([0-9]+)",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.access-list"
-						},
-						"2": {
-							"name": "variable.acl.number"
-						}
-					}
-				},
-				{
-					"match": "(?i)(ip access-list)\\s+(standard|extended)\\s+([0-9a-z\\-_]+)",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.ip-access-list"
-						},
-						"3": {
-							"name": "variable.acl.name"
-						}
-					}
-				}
-			]
-		},
 		"top-level-contexts-routing": {
 			"patterns": [
 				{
