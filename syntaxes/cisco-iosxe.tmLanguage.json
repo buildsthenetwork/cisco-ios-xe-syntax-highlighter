@@ -40,6 +40,18 @@
 				{
 					"include": "#router"
 				},
+				{
+					"include": "#vrf"
+				},
+				{
+					"include": "#policy-map"
+				},
+				{
+					"include": "#class-map"
+				},
+				{
+					"include": "#service-template"
+				},
 
 
 
@@ -218,18 +230,80 @@
 				}
 			]
 		},
+		"policy-map": {
+			"patterns": [
+				{
+					"match": "^(policy-map)\\s+(type control subscriber)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.policy-map.cisco"
+						},
+						"3": {
+							"name": "variable.policy-map.name"
+						}
+					}
+				},
+				{
+					"match": "^(policy-map)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.policy-map.cisco"
+						},
+						"2": {
+							"name": "variable.policy-map.name"
+						}
+					}
+				}
+			]
+		},
+		"class-map": {
+			"patterns": [
+				{
+					"match": "^(class-map)\\s+(match-all|match-any)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.class-map"
+						},
+						"3": {
+							"name": "variable.class-map.name"
+						}
+					}
+				},
+				{
+					"match": "^(class-map)\\s+(type control subscriber)\\s+(match-all|match-any)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.class-map"
+						},
+						"4": {
+							"name": "variable.class-map.name"
+						}
+					}
+				}
+			]
+		},
+		"service-template": {
+			"patterns": [
+				{
+					"match": "^(?i)(service-template)\\s+(.*)\\b",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.service-template"
+						},
+						"2": {
+							"name": "variable.service-template.name"
+						}
+					}
+				}
+			]
+		},
+
 		"top-level-contexts": {
 			"patterns": [
-
 				{
 					"include": "#top-level-commands-layer2"
 				},
-				{
-					"include": "#top-level-contexts-routing"
-				},
-				{
-					"include": "#top-level-contexts-maps"
-				},
+
 				{
 					"match": "^(interface|int)",
 					"name": "entity.name.type.interface.cisco"
@@ -264,66 +338,6 @@
 			]
 		},
 
-
-		"top-level-contexts-maps": {
-			"patterns": [
-				{
-					"match": "^(policy-map)\\s+(type control subscriber)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.policy-map.cisco"
-						},
-						"3": {
-							"name": "variable.policy-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(policy-map)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.policy-map.cisco"
-						},
-						"2": {
-							"name": "variable.policy-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(class-map)\\s+(match-all|match-any)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.class-map"
-						},
-						"3": {
-							"name": "variable.class-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(class-map)\\s+(type control subscriber)\\s+(match-all|match-any)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.class-map"
-						},
-						"4": {
-							"name": "variable.class-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(?i)(service-template)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.service-template"
-						},
-						"2": {
-							"name": "variable.service-template.name"
-						}
-					}
-				}
-			]
-		},
 		"top-level-commands": {
 			"patterns": [
 				{
