@@ -74,6 +74,11 @@
 					"include": "#spanning-tree"
 				},
 				{
+					"include": "#username"
+				},
+
+
+				{
 					"include": "#top-level-commands"
 				},
 				{
@@ -138,6 +143,17 @@
 				{
 					"match": "^aaa new-model",
 					"name": "keyword.control.auth.aaa-new-model"
+				},
+				{
+					"match": "^(aaa (?:authentication|authorization|accounting)).*group ([0-9a-zA-Z\\-_]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.auth.aaa"
+						},
+						"2": {
+							"name": "variable.auth.aaa.group-name"
+						}
+					}
 				},
 				{
 					"match": "^(?i)(aaa group server)\\s+(radius|tacacs\\+)\\s([0-9a-z\\-_]+)",
@@ -379,6 +395,21 @@
 				}
 			]
 		},
+		"username": {
+			"patterns": [
+				{
+					"match": "^(username) ([a-zA-Z]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.auth.username"
+						},
+						"2": {
+							"name": "variable.auth.username"
+						}
+					}
+				}
+			]
+		},
 		"top-level-commands": {
 			"patterns": [
 				{
@@ -467,28 +498,8 @@
 		},
 		"top-level-commands-auth": {
 			"patterns": [
-				{
-					"match": "^(username) ([a-zA-Z]+)",
-					"captures": {
-						"1": {
-							"name": "keyword.control.auth.username"
-						},
-						"2": {
-							"name": "variable.auth.username"
-						}
-					}
-				},
-				{
-					"match": "^(aaa (?:authentication|authorization|accounting)).*group ([0-9a-zA-Z\\-_]+)",
-					"captures": {
-						"1": {
-							"name": "keyword.control.auth.aaa"
-						},
-						"2": {
-							"name": "variable.auth.aaa.group-name"
-						}
-					}
-				},
+
+
 				{
 					"match": "^radius-server",
 					"name": "keyword.control.auth.radius"
