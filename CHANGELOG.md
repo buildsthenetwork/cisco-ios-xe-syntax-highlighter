@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-07-20
+
 ### Added
  - v0.2.2 Added highlighting rule for storage commands.
  - v0.2.2 Added highlighting rule for interface ACL access-groups.
@@ -19,8 +21,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
  - v0.2.2 Changed highlighting rule for vlans to highlight vlan IDs, and include vlan ranges. (i.e. vlan 10,20-25,30 now highlights the IDs, including the range)
-
-## [0.2.2] - 2026-07-20
 
 ## [0.2.1] - 2026-07-20
 
