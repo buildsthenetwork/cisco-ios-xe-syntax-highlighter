@@ -182,11 +182,11 @@
 					"name": "variable.interfaces.link-agg"
 				},
 				{
-					"match": "(?i)([a-z]*gigabitethernet)([0-9/]+)($|\\.[0-9]+)",
+					"match": "(?i)([a-z]*gigabitethernet)([0-9/]+)($|(\\.|-)[0-9]+)",
 					"name": "variable.interfaces.physical.full-name"
 				},
 				{
-					"match": "(?i)(g|gi|te|ten|twe|fo|hun)([0-9/]+)($|\\.[0-9]+)",
+					"match": "(?i)(hun|ten|twe|fo|te|gi|g)([0-9/]+)($|(\\.|-)[0-9]+)",
 					"name": "variable.interfaces.physical.short-name"
 				},
 				{
@@ -198,7 +198,7 @@
 					"name": "constant.numeric.ip-address.cisco"
 				},
 				{
-					"match": "^(conf|configure) (t|term|terminal|conf|confirm)",
+					"match": "^(configure|conf) (confirm|conf|terminal|term|t)",
 					"name": "keyword.configure"
 				},
 				{

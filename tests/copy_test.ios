@@ -1,0 +1,2 @@
+copy run start
+copy usbflash:test.txt flash:test.txt

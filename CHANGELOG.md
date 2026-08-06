@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+ - v0.2.2 Fixed bug causing interface ranges to not highlight properly.
+ - v0.2.2 Fixed bug causing configure terminal and configure confirm to not highlight properly.
+
+## [0.2.2] - 2026-07-20
+
 ## [0.2.1] - 2026-07-20
 
 ### Added
