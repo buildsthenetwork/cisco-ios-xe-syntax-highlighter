@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
  - v0.2.3 Added highlighting rules for various ip commands.
+ - v0.2.3 Added highlighting for various logging commands.
+ - v0.2.3 Added highlighting for crypto key labels.
+
+### Changed
+ - v0.2.3 Changed highlighting rules for physical interfaces.
+ - v0.2.3 Changed highlighting for storage commands to include highlighting the directory.
+ - v0.2.3 Changed highlighting rules for negation (no, shut, shutdown)
 
 ### Fixed
  - v0.2.3 Fixed bug causing physical interfaces to not highlight under certain conditions.

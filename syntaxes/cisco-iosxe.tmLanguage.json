@@ -166,8 +166,8 @@
 					}
 				},
 				{
-					"match": "(?i)^\\s*(no|shut|shutdown)\\b",
-					"name": "keyword.control.negation.cisco"
+					"match": "(?i)^\\s*(no|shutdown|shut)\\b",
+					"name": "keyword.negation"
 				},
 				{
 					"match": "(?i)(loopback|lo)[0-9]+",
@@ -182,11 +182,11 @@
 					"name": "variable.interfaces.link-agg"
 				},
 				{
-					"match": "(?i)([a-z]*gigabitethernet)([0-9/-]+(?:\\.[0-9]+)?)\\b",
+					"match": "(?i)([a-z]*gigabitethernet)([0-9/-]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
 					"name": "variable.interfaces.physical.full-name"
 				},
 				{
-					"match": "(?i)(hun|ten|twe|fo|te|gi|g)([0-9/-]+(?:\\.[0-9]+)?)\\b",
+					"match": "(?i)(hun|ten|twe|fo|te|gi|g)([0-9/]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
 					"name": "variable.interfaces.physical.short-name"
 				},
 				{
@@ -225,8 +225,16 @@
 					"name": "keyword.write"
 				},
 				{
-					"match": "(usb)?flash(-[0-9])?:",
-					"name": "keyword.control.flash"
+					"match": "((?:usb)?flash(?:-[0-9])?:)(.*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.flash"
+						},
+						"2": {
+							"name": "string.flash.directory"
+						}
+					}
+					
 				}
 			]
 		},
@@ -370,6 +378,17 @@
 					"name": "keyword.control.dai.cisco"
 				},
 				{
+					"match": "(ip ssh) rsa keypair-name (.*)$",
+					"captures": {
+						"1": {
+							"name": "keyword.control.type.ip-ssh.cisco"
+						},
+						"2": {
+							"name": "variable.ip-ssh-keypair-name"
+						}
+					}
+				},
+				{
 					"match": "ip ssh",
 					"name": "keyword.control.type.ip-ssh.cisco"
 				},
@@ -453,6 +472,14 @@
 				{
 					"match": "ip arp",
 					"name": "keyword.control.ip-arp"
+				},
+				{
+					"match": "ip bootp",
+					"name": "keyword.control.ip-bootp"
+				},
+				{
+					"match": "ip source-route",
+					"name": "keyword.control.ip-source-route"
 				}
 			]
 		},
@@ -755,13 +782,16 @@
 		"crypto": {
 			"patterns": [
 				{
-					"match": "^(crypto key generate) rsa modulus ([0-9]+)",
+					"match": "^(crypto key generate) rsa modulus ([0-9]+) (label (.*))?$",
 					"captures": {
 						"1": {
 							"name": "keyword.control.crypto-key-generate.cisco"
 						},
 						"2": {
 							"name": "variable.modulus-size.cisco"
+						},
+						"4": {
+							"name": "variable.crypto-key-label"
 						}
 					}
 				}
@@ -770,7 +800,7 @@
 		"logging": {
 			"patterns": [
 				{
-					"match": "logging (buffered|console|monitor|host|source-interface)",
+					"match": "logging (buffered|console|monitor|host|source-interface|userinfo|origin-id)",
 					"name": "keyword.control.logging"
 				}
 			]

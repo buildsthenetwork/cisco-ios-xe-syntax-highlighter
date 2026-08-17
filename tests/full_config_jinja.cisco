@@ -418,4 +418,9 @@ policy-map COPP-POLICY
  class class-default
   police 1000000 conform-action transmit exceed-action drop
 !
+
+crypto key generate rsa modulus 2048 label SSH_KEY
+ip ssh rsa keypair-name SSH_KEY
+
+!
 end

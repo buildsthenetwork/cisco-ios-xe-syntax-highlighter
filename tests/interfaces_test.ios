@@ -335,6 +335,8 @@ interface Te0/2/0.311
  ip access-group PROD-DB-IN in
 !
 interface range g1/0/1-48
+!
+aaa authorization config-commands
 
 !
 interface range gi2/0/1-48
