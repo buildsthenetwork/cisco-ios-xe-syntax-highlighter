@@ -75,7 +75,7 @@ For other filenames, add a VS Code file association:
 - Syntax coverage is incomplete and will grow incrementally.
 - The grammar is a highlighter, not a parser, linter, formatter, or configuration validator.
 - Most noncanonical command abbreviations are not recognized.
-- Jinja2 support is currently limited to full-line comments.
+- Jinja2 support is limited.
 - Some commands are context-sensitive in IOS but may be highlighted more broadly by this grammar.
 
 ## Feedback and contributions
