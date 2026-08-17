@@ -1,0 +1,99 @@
+!
+hostname TEST-RTR-01
+!
+ip routing
+ip cef
+ip domain lookup
+ip domain name example.com
+ip name-server 10.10.10.10
+ip name-server 10.10.10.11
+ip domain list example.com
+!
+ip http server
+ip http secure-server
+ip http authentication local
+ip http port 8080
+ip http secure-port 8443
+ip http timeout-policy idle 60 life 86400 requests 10000
+ip http client source-interface Loopback0
+!
+ip ftp username cisco
+ip ftp password 0 Cisco123
+ip ftp passive
+ip ftp source-interface GigabitEthernet1
+!
+ip tftp source-interface Loopback0
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 3
+ip ssh source-interface Loopback0
+!
+ip scp server enable
+!
+ip forward-protocol nd
+ip forward-protocol udp
+ip forward-protocol udp 69
+ip forward-protocol udp 137
+!
+ip dhcp excluded-address 10.20.30.1 10.20.30.20
+ip dhcp excluded-address 10.20.30.250 10.20.30.254
+ip dhcp ping packets 3
+ip dhcp ping timeout 500
+!
+ip dhcp pool USERS
+ network 10.20.30.0 255.255.255.0
+ default-router 10.20.30.1
+ dns-server 10.10.10.10 10.10.10.11
+ domain-name example.com
+ lease 7
+!
+ip access-list standard MGMT-ACCESS
+ permit 10.100.0.0 0.0.255.255
+ deny any log
+!
+ip access-list extended WEB-ACCESS
+ permit tcp 10.20.30.0 0.0.0.255 any eq 443
+ permit tcp 10.20.30.0 0.0.0.255 any eq 80
+ deny ip any any log
+!
+ip route 0.0.0.0 0.0.0.0 10.1.1.1
+ip route 10.50.0.0 255.255.0.0 10.1.1.2 10
+ip route 192.168.100.0 255.255.255.0 Null0
+!
+ip prefix-list DEFAULT-ONLY seq 5 permit 0.0.0.0/0
+ip prefix-list INTERNAL seq 10 permit 10.0.0.0/8 le 32
+ip prefix-list INTERNAL seq 20 permit 172.16.0.0/12 le 32
+ip prefix-list INTERNAL seq 30 permit 192.168.0.0/16 le 32
+!
+ip sla 10
+ icmp-echo 10.1.1.1 source-interface Loopback0
+ frequency 30
+ip sla schedule 10 life forever start-time now
+!
+ip tcp synwait-time 10
+ip tcp path-mtu-discovery
+ip tcp selective-ack
+!
+ip multicast-routing distributed
+!
+ip pim rp-address 10.255.255.1
+ip pim autorp listener
+!
+ip nat inside source list NAT-INSIDE interface GigabitEthernet1 overload
+ip nat translation timeout 3600
+ip nat translation tcp-timeout 3600
+ip nat translation udp-timeout 300
+!
+ip verify drop-rate compute window 30
+!
+ip flow-export source Loopback0
+ip flow-export version 9
+ip flow-export destination 10.100.50.10 2055
+!
+ip arp proxy disable
+!
+no ip source-route
+no ip bootp server
+no ip http server
+ip http secure-server
+!
