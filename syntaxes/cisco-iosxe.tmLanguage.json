@@ -6,10 +6,10 @@
 			"include": "#jinja2"
 		},
 		{
-			"include": "#global-configs"
+			"include": "#keywords"
 		},
 		{
-			"include": "#keywords"
+			"include": "#global-configs"
 		}
 	],
 	"repository": {
@@ -178,15 +178,15 @@
 					"name": "variable.interfaces.svi"
 				},
 				{
-					"match": "(?i)(port-channel[0-9]+|po[0-9]+)",
+					"match": "(?i)(port-channel[0-9]+|po[0-9]+)(\\.[0-9]+)?",
 					"name": "variable.interfaces.link-agg"
 				},
 				{
-					"match": "(?i)([a-z]*gigabitethernet)([0-9/]+)($|(\\.|-)[0-9]+)",
+					"match": "(?i)([a-z]*gigabitethernet)([0-9/-]+(?:\\.[0-9]+)?)\\b",
 					"name": "variable.interfaces.physical.full-name"
 				},
 				{
-					"match": "(?i)(hun|ten|twe|fo|te|gi|g)([0-9/]+)($|(\\.|-)[0-9]+)",
+					"match": "(?i)(hun|ten|twe|fo|te|gi|g)([0-9/-]+(?:\\.[0-9]+)?)\\b",
 					"name": "variable.interfaces.physical.short-name"
 				},
 				{
@@ -374,7 +374,7 @@
 					"name": "keyword.control.type.ip-ssh.cisco"
 				},
 				{
-					"match": "^(ip domain)\\s+name\\s+(.*)\\b",
+					"match": "^(ip domain)\\s+(?:name|list)\\s+(.*)\\b",
 					"captures": {
 						"1": {
 							"name": "keyword.control.type.ip-domain.cisco"
@@ -385,8 +385,74 @@
 					}
 				},
 				{
+					"match": "ip domain",
+					"name": "keyword.control.type.ip-domain.cisco"
+				},
+				{
 					"match": "^ip name-server",
 					"name": "keyword.control.ip-name-servers.cisco"
+				},
+				{
+					"match": "ip http",
+					"name": "keyword.control.type.ip-http"
+				},
+				{
+					"match": "ip (t)?ftp",
+					"name": "keyword.control.type.ftp"
+				},
+				{
+					"match": "ip scp",
+					"name": "keyword.control.type.scp"
+				},
+				{
+					"match": "ip forward-protocol",
+					"name": "keyword.control.type.forward-protocol"
+				},
+				{
+					"match": "(ip dhcp pool)(.*)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.context.ip-dhcp-pool"
+						},
+						"2": {
+							"name": "variable.ip-dhcp-pool"
+						}
+					}
+				},
+				{
+					"match": "ip dhcp",
+					"name": "keyword.control.ip-dhcp"
+				},
+				{
+					"include": "#ip-sla"
+				},
+				{
+					"match": "ip tcp",
+					"name": "keyword.control.ip-tcp"
+				},
+				{
+					"match": "ip multicast-routing",
+					"name": "keyword.control.ip-multicast-routing"
+				},
+				{
+					"match": "ip pim",
+					"name": "keyword.control.ip-pim"
+				},
+				{
+					"match": "ip nat",
+					"name": "keyword.control.ip-nat"
+				},
+				{
+					"match": "ip verify",
+					"name": "keyword.control.ip-verify"
+				},
+				{
+					"match": "ip flow-export",
+					"name": "keyword.control.ip-flow-export"
+				},
+				{
+					"match": "ip arp",
+					"name": "keyword.control.ip-arp"
 				}
 			]
 		},
@@ -400,6 +466,32 @@
 						},
 						"3": {
 							"name": "variable.acl.name"
+						}
+					}
+				}
+			]
+		},
+		"ip-sla": {
+			"patterns": [
+				{
+					"match": "(ip sla) ([0-9]{1,4})",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.ip-sla"
+						},
+						"2": {
+							"name": "variable.ip-sla"
+						}
+					}
+				},
+				{
+					"match": "(ip sla) schedule ([0-9]{1,4})",
+					"captures": {
+						"1": {
+							"name": "keyword.control.ip-sla"
+						},
+						"2": {
+							"name": "variable.ip-sla"
 						}
 					}
 				}

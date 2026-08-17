@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+ - v0.2.3 Added highlighting rules for various ip commands.
+
+### Fixed
+ - v0.2.3 Fixed bug causing physical interfaces to not highlight under certain conditions.
+ - v0.2.3 Fixed bug causing some interfaces ranges to not highlight properly.
+ - v0.2.3 Fixed bug causing subinterfaces to not highlight properly.
+
 ## [0.2.2] - 2026-07-20
 
 ### Added
