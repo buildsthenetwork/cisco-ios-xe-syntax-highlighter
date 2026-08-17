@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## 0.2.3 - 2026-08-17
+
 ### Added
  - v0.2.3 Added highlighting rules for various ip commands.
  - v0.2.3 Added highlighting for various logging commands.
