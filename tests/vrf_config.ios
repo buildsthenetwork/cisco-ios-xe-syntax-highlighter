@@ -76,6 +76,12 @@ ip route 192.0.2.0 255.255.255.0 198.51.100.1
 !
 ! OSPF using VRFs
 !
+!
+router ospf 500
+    router-id 192.168.10.1
+    passive-interface default
+    no passive-interface Gi1/0/1
+!
 router ospf 100 vrf CORP
  router-id 10.255.100.1
  passive-interface default

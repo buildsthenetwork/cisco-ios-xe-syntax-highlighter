@@ -6,12 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## Added
+- v0.2.4 Added highlighting for vrf usage in router ospf.
+- v0.2.4 Added highlighting for vrf usage in router eigrp.
+
 ## Changed
 - v0.2.4 Changed VRF command highlighting.
 - v0.2.4 Changed ip route vrf command highlighting.
 
 ## Fixed
 - v0.2.4 Fixed bug causing ip tacacs commands to not highlight properly.
+- v0.2.4 Fixed bug causing some router eigrp commands to not highlight.
 
 ## 0.2.3 - 2026-08-17
 
