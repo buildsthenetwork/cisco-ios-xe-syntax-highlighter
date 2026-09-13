@@ -1,4 +1,4 @@
-# Cisco IOS-XE Syntax Highlighting (Pre-Release)
+# Cisco IOS-XE Syntax Highlighting (Pre-Release `v0.2.4`)
 
 Syntax highlighting for Cisco IOS and IOS XE configuration files in Visual Studio Code.
 

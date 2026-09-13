@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## 0.2.4 - 2026-09-13
+
 ## Added
 - v0.2.4 Added highlighting for ip version in any command.
 - v0.2.4 Added highlighting for vrf usage in router ospf.
@@ -109,5 +111,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The extension provides syntax highlighting only; it does not validate configuration correctness.
 - Jinja2 support is currently limited to full-line comments.
 
-[Unreleased]: https://github.com/buildsthenetwork/cisco-ios-xe-parser/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/buildsthenetwork/cisco-ios-xe-parser/releases/tag/v0.1.0
