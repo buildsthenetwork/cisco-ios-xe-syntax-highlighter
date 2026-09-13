@@ -174,30 +174,6 @@
 					"name": "keyword.negation"
 				},
 				{
-					"match": "(?i)(loopback|lo)[0-9]+",
-					"name": "entity.name.type.interface.loopback"
-				},
-				{
-					"match": "(?i)vlan[0-9]+",
-					"name": "entity.name.type.interface.svi"
-				},
-				{
-					"match": "(?i)(port-channel[0-9]+|po[0-9]+)(\\.[0-9]+)?",
-					"name": "entity.name.type.interface.link-agg"
-				},
-				{
-					"match": "(?i)([a-z]*gig(abitethernet|e))([0-9/]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
-					"name": "entity.name.type.interface.physical.full-name"
-				},
-				{
-					"match": "(?i)(hun|ten|twe|fo|te|gi|g)([0-9/]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
-					"name": "entity.name.type.interface.physical.short-name"
-				},
-				{
-					"match": "(?i)(tunnel|tun)[0-9]+",
-					"name": "entity.name.type.interface.tunnel"
-				},
-				{
 					"match": "\\b((?:(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\.){3}(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2}))(/(?:3[0-2]|2[0-9]|1?[0-9]))\\b",
 					"captures": {
 						"1": {
@@ -662,6 +638,30 @@
 				{
 					"match": "^(interface|int)",
 					"name": "keyword.control.interface.cisco"
+				},
+							{
+					"match": "(?i)(loopback|lo)[0-9]+",
+					"name": "entity.name.type.interface.loopback"
+				},
+				{
+					"match": "(?i)vlan[0-9]+",
+					"name": "entity.name.type.interface.svi"
+				},
+				{
+					"match": "(?i)(port-channel[0-9]+|po[0-9]+)(\\.[0-9]+)?",
+					"name": "entity.name.type.interface.link-agg"
+				},
+				{
+					"match": "(?i)([a-z]*gig(abitethernet|e))([0-9/]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
+					"name": "entity.name.type.interface.physical.full-name"
+				},
+				{
+					"match": "(?i)(hun|ten|twe|fo|te|gi|g)([0-9/]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
+					"name": "entity.name.type.interface.physical.short-name"
+				},
+				{
+					"match": "(?i)(tunnel|tun)[0-9]+",
+					"name": "entity.name.type.interface.tunnel"
 				},
 				{
 					"match": "(?i)ip access-group(\\s+[a-z0-9\\-_]+\\s+)(in|out)",
