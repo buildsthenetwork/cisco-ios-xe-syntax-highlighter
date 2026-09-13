@@ -343,3 +343,37 @@ interface range gi2/0/1-48
 !
 interface range twe1/0/2-48
 !
+!
+interface TwentyFiveGigE1/0/1
+ description 25G ACCESS LINK
+ no switchport
+ ip address 10.25.1.1 255.255.255.252
+ no shutdown
+!
+interface TwentyFiveGigE1/0/24
+ description 25G TRUNK
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30
+!
+interface TwentyFiveGigE1/1/1
+ description 25G UPLINK
+ no switchport
+ ip address 10.25.2.1 255.255.255.252
+!
+interface TwentyFiveGigE2/0/1
+ description STACK MEMBER 2
+ no shutdown
+!
+interface TwentyFiveGigE2/1/1
+ description STACK MEMBER 2 UPLINK
+!
+interface TwentyFiveGigE1/0/1.100
+ description DOT1Q SUBINTERFACE
+ encapsulation dot1Q 100
+ ip address 10.100.0.1 255.255.255.0
+!
+interface TwentyFiveGigE1/0/1.200
+ encapsulation dot1Q 200
+ vrf forwarding CORP
+ ip address 10.200.0.1 255.255.255.0
+!

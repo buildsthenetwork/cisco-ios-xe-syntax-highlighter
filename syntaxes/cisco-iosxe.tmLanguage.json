@@ -146,6 +146,10 @@
 		"keywords": {
 			"patterns": [
 				{
+					"match": "ipv[46]",
+					"name": "keyword.control.ip-version"
+				},
+				{
 					"match": "^version [0-9]+\\.[0-9]+$",
 					"name": "string.unquoted.system-version"
 				},
@@ -168,30 +172,6 @@
 				{
 					"match": "(?i)^\\s*(no|shutdown|shut)\\b",
 					"name": "keyword.negation"
-				},
-				{
-					"match": "(?i)(loopback|lo)[0-9]+",
-					"name": "variable.interfaces.loopback"
-				},
-				{
-					"match": "(?i)vlan[0-9]+",
-					"name": "variable.interfaces.svi"
-				},
-				{
-					"match": "(?i)(port-channel[0-9]+|po[0-9]+)(\\.[0-9]+)?",
-					"name": "variable.interfaces.link-agg"
-				},
-				{
-					"match": "(?i)([a-z]*gigabitethernet)([0-9/]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
-					"name": "variable.interfaces.physical.full-name"
-				},
-				{
-					"match": "(?i)(hun|ten|twe|fo|te|gi|g)([0-9/]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
-					"name": "variable.interfaces.physical.short-name"
-				},
-				{
-					"match": "(?i)(tunnel|tun)[0-9]+",
-					"name": "variable.interfaces.tunnel"
 				},
 				{
 					"match": "\\b((?:(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\\.){3}(?:25[0-5]|2[0-4][0-9]|1?[0-9]{1,2}))(/(?:3[0-2]|2[0-9]|1?[0-9]))\\b",
@@ -339,8 +319,15 @@
 					"include": "#ip-access-list"
 				},
 				{
+					"include": "#ip-route"
+				},
+				{
 					"match": "^ip radius",
-					"name": "keyword.control.auth.radius.source-interface"
+					"name": "keyword.control.auth.radius"
+				},
+				{
+					"match": "^ip tacacs",
+					"name": "keyword.control.auth.tacacs"
 				},
 				{
 					"match": "ip routing",
@@ -350,21 +337,7 @@
 					"match": "ip cef",
 					"name": "keyword.control.ip-cef"
 				},
-				{
-					"match": "^(ip route) vrf ([a-zA-Z]+)\\s",
-					"captures": {
-						"1": {
-							"name": "keyword.control.ip-route-vrf.cisco"
-						},
-						"2": {
-							"name": "variable.ip-route.vrf.cisco"
-						}
-					}
-				},
-				{
-					"match": "^ip route",
-					"name": "keyword.control.ip-route.cisco"
-				},
+
 				{
 					"match": "^ip prefix-list",
 					"name": "keyword.control.ip-prefix-list.cisco"
@@ -498,6 +471,25 @@
 				}
 			]
 		},
+		"ip-route": {
+			"patterns": [
+				{
+					"match": "^(ip route vrf) ([a-zA-Z_0-9]+)\\s",
+					"captures": {
+						"1": {
+							"name": "keyword.control.ip-route-vrf"
+						},
+						"2": {
+							"name": "entity.name.type.context.vrf"
+						}
+					}
+				},
+				{
+					"match": "^ip route",
+					"name": "keyword.control.ip-route"
+				}
+			]
+		},
 		"ip-sla": {
 			"patterns": [
 				{
@@ -527,13 +519,33 @@
 		"router": {
 			"patterns": [
 				{
-					"match": "^(?i)(router)\\s+(ospf|eigrp|rip|bgp)\\s+([0-9]+)$",
+					"match": "^(?i)(router)\\s+(ospf|eigrp|rip|bgp)\\s+([0-9a-z_]+)\\s+($|vrf ([a-z0-9_]+))",
 					"captures": {
 						"1": {
 							"name": "entity.name.type.context.router.cisco"
 						},
 						"3": {
 							"name": "variable.router.autonomous-system"
+						},
+						"4": {
+							"name": "keyword.control.router-vrf"
+						},
+						"5": {
+							"name": "entity.name.type.context.vrf.name"
+						}
+					}
+				},
+				{
+					"match": "(?i)\\s+address-family ipv4 unicast (vrf) ([a-z0-9_]+) autonomous-system ([0-9]+)\\s+$",
+					"captures":{
+						"1": {
+							"name": "keyword.control.router-vrf"
+						},
+						"2": {
+							"name": "entity.name.type.context.vrf.name"
+						},
+						"3": {
+							"name": "variable.eigrp.autonomous-system"
 						}
 					}
 				}
@@ -545,10 +557,10 @@
 					"match": "^(?i)(vrf)\\s+(definition)\\s+([0-9a-z\\-_]+)$",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.router-vrf"
+							"name": "keyword.control.router-vrf"
 						},
 						"3": {
-							"name": "variable.vrf.name"
+							"name": "entity.name.type.context.vrf.name"
 						}
 					}
 				}
@@ -625,7 +637,31 @@
 			"patterns": [
 				{
 					"match": "^(interface|int)",
-					"name": "entity.name.type.context.interface.cisco"
+					"name": "keyword.control.interface.cisco"
+				},
+							{
+					"match": "(?i)(loopback|lo)[0-9]+",
+					"name": "entity.name.type.interface.loopback"
+				},
+				{
+					"match": "(?i)vlan[0-9]+",
+					"name": "entity.name.type.interface.svi"
+				},
+				{
+					"match": "(?i)(port-channel[0-9]+|po[0-9]+)(\\.[0-9]+)?",
+					"name": "entity.name.type.interface.link-agg"
+				},
+				{
+					"match": "(?i)([a-z]*gig(abitethernet|e))([0-9/]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
+					"name": "entity.name.type.interface.physical.full-name"
+				},
+				{
+					"match": "(?i)(hun|ten|twe|fo|te|gi|g)([0-9/]+(?:\\.[0-9]+)?)(-[0-9]+)?\\b",
+					"name": "entity.name.type.interface.physical.short-name"
+				},
+				{
+					"match": "(?i)(tunnel|tun)[0-9]+",
+					"name": "entity.name.type.interface.tunnel"
 				},
 				{
 					"match": "(?i)ip access-group(\\s+[a-z0-9\\-_]+\\s+)(in|out)",
@@ -651,6 +687,17 @@
 						},
 						"2": {
 							"name": "keyword.control.interface.channel-group.mode"
+						}
+					}
+				},
+				{
+					"match": "(?i)\\s+(vrf) forwarding ([a-z0-9_]+)\\s+$",
+					"captures": {
+						"1": {
+							"name": "keyword.control.router-vrf"
+						},
+						"2": {
+							"name": "entity.name.type.context.vrf.name"
 						}
 					}
 				}
