@@ -1,0 +1,156 @@
+!
+! VRF definitions
+!
+vrf definition CORP
+ description Corporate User Network
+ rd 65000:100
+ route-target export 65000:100
+ route-target import 65000:100
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+vrf definition GUEST
+ description Guest Internet Network
+ rd 65000:200
+ route-target export 65000:200
+ route-target import 65000:200
+ !
+ address-family ipv4
+ exit-address-family
+!
+vrf definition MANAGEMENT
+ description Network Management
+ rd 65000:300
+ !
+ address-family ipv4
+ exit-address-family
+!
+! Interfaces
+!
+interface GigabitEthernet1/0/1
+ description CORP LAN
+ vrf forwarding CORP
+ ip address 10.10.10.1 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet1/0/2
+ description GUEST LAN
+ vrf forwarding GUEST
+ ip address 10.20.20.1 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet1/0/3
+ description MANAGEMENT LAN
+ vrf forwarding MANAGEMENT
+ ip address 10.30.30.1 255.255.255.0
+ no shutdown
+!
+interface Loopback100
+ description CORP ROUTER ID
+ vrf forwarding CORP
+ ip address 10.255.100.1 255.255.255.255
+!
+interface Loopback200
+ description GUEST ROUTER ID
+ vrf forwarding GUEST
+ ip address 10.255.200.1 255.255.255.255
+!
+! VRF-aware static routes
+!
+ip route vrf CORP 10.100.0.0 255.255.0.0 10.10.10.254
+ip route vrf CORP 10.110.0.0 255.255.0.0 GigabitEthernet1/0/1 10.10.10.254
+ip route vrf CORP 172.16.100.0 255.255.255.0 Null0 250
+!
+ip route vrf GUEST 0.0.0.0 0.0.0.0 10.20.20.254
+ip route vrf GUEST 192.168.200.0 255.255.255.0 GigabitEthernet1/0/2 10.20.20.254 200
+!
+ip route vrf MANAGEMENT 10.200.0.0 255.255.0.0 10.30.30.254
+!
+! Global static route
+!
+ip route 192.0.2.0 255.255.255.0 198.51.100.1
+!
+! OSPF using VRFs
+!
+router ospf 100 vrf CORP
+ router-id 10.255.100.1
+ passive-interface default
+ no passive-interface GigabitEthernet1/0/1
+ network 10.10.10.0 0.0.0.255 area 0
+ network 10.255.100.1 0.0.0.0 area 0
+ redistribute static subnets
+!
+router ospf 200 vrf GUEST
+ router-id 10.255.200.1
+ passive-interface default
+ no passive-interface GigabitEthernet1/0/2
+ network 10.20.20.0 0.0.0.255 area 20
+ default-information originate
+!
+! Named EIGRP with VRF address families
+!
+router eigrp ENTERPRISE
+ !
+ address-family ipv4 unicast vrf CORP autonomous-system 100
+  eigrp router-id 10.255.100.1
+  network 10.10.10.0 0.0.0.255
+  network 10.255.100.1 0.0.0.0
+  redistribute static
+  passive-interface default
+  no passive-interface GigabitEthernet1/0/1
+ exit-address-family
+ !
+ address-family ipv4 unicast vrf MANAGEMENT autonomous-system 300
+  eigrp router-id 10.30.30.1
+  network 10.30.30.0 0.0.0.255
+ exit-address-family
+!
+! BGP with VRF address families
+!
+router bgp 65000
+ bgp router-id 192.0.2.1
+ bgp log-neighbor-changes
+ !
+ neighbor 198.51.100.2 remote-as 65001
+ !
+ address-family ipv4
+  network 192.0.2.0 mask 255.255.255.0
+  neighbor 198.51.100.2 activate
+ exit-address-family
+ !
+ address-family ipv4 vrf CORP
+  network 10.10.10.0 mask 255.255.255.0
+  network 10.100.0.0 mask 255.255.0.0
+  neighbor 10.10.10.2 remote-as 65100
+  neighbor 10.10.10.2 activate
+  redistribute connected
+  redistribute static
+ exit-address-family
+ !
+ address-family ipv4 vrf GUEST
+  network 10.20.20.0 mask 255.255.255.0
+  neighbor 10.20.20.2 remote-as 65200
+  neighbor 10.20.20.2 activate
+  redistribute connected
+ exit-address-family
+!
+! VRF-aware operational/service commands
+!
+ip domain lookup source-interface Loopback100
+ip ssh source-interface Loopback100
+!
+! Useful VRF command forms for parser testing
+!
+ip vrf OLD_STYLE_VRF
+ rd 65000:400
+!
+interface GigabitEthernet1/0/4
+ description Legacy VRF syntax test
+ ip vrf forwarding OLD_STYLE_VRF
+ ip address 10.40.40.1 255.255.255.0
+!
+end

@@ -56,6 +56,8 @@ ip access-list extended WEB-ACCESS
  permit tcp 10.20.30.0 0.0.0.255 any eq 80
  deny ip any any log
 !
+!
+ip route vrf TEST_VRF9
 ip route 0.0.0.0 0.0.0.0 10.1.1.1
 ip route 10.50.0.0 255.255.0.0 10.1.1.2 10
 ip route 192.168.100.0 255.255.255.0 Null0
@@ -96,5 +98,9 @@ no ip source-route
 no ip bootp server
 no ip http server
 ip http secure-server
+!
+!
+ip radius
+ip tacacs
 !
 !

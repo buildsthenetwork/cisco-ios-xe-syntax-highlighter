@@ -339,8 +339,15 @@
 					"include": "#ip-access-list"
 				},
 				{
+					"include": "#ip-route"
+				},
+				{
 					"match": "^ip radius",
-					"name": "keyword.control.auth.radius.source-interface"
+					"name": "keyword.control.auth.radius"
+				},
+				{
+					"match": "^ip tacacs",
+					"name": "keyword.control.auth.tacacs"
 				},
 				{
 					"match": "ip routing",
@@ -350,21 +357,7 @@
 					"match": "ip cef",
 					"name": "keyword.control.ip-cef"
 				},
-				{
-					"match": "^(ip route) vrf ([a-zA-Z]+)\\s",
-					"captures": {
-						"1": {
-							"name": "keyword.control.ip-route-vrf.cisco"
-						},
-						"2": {
-							"name": "variable.ip-route.vrf.cisco"
-						}
-					}
-				},
-				{
-					"match": "^ip route",
-					"name": "keyword.control.ip-route.cisco"
-				},
+
 				{
 					"match": "^ip prefix-list",
 					"name": "keyword.control.ip-prefix-list.cisco"
@@ -498,6 +491,25 @@
 				}
 			]
 		},
+		"ip-route": {
+			"patterns": [
+				{
+					"match": "^(ip route vrf) ([a-zA-Z_0-9]+)\\s",
+					"captures": {
+						"1": {
+							"name": "keyword.control.ip-route-vrf"
+						},
+						"2": {
+							"name": "entity.name.type.context.vrf"
+						}
+					}
+				},
+				{
+					"match": "^ip route",
+					"name": "keyword.control.ip-route"
+				}
+			]
+		},
 		"ip-sla": {
 			"patterns": [
 				{
@@ -545,10 +557,10 @@
 					"match": "^(?i)(vrf)\\s+(definition)\\s+([0-9a-z\\-_]+)$",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.router-vrf"
+							"name": "keyword.control.router-vrf"
 						},
 						"3": {
-							"name": "variable.vrf.name"
+							"name": "entity.name.type.context.vrf.name"
 						}
 					}
 				}

@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## Changed
+- v0.2.4 Changed VRF command highlighting.
+- v0.2.4 Changed ip route vrf command highlighting.
+
+## Fixed
+- v0.2.4 Fixed bug causing ip tacacs commands to not highlight properly.
+
 ## 0.2.3 - 2026-08-17
 
 ### Added
