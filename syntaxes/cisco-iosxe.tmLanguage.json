@@ -773,8 +773,18 @@
 		"enable": {
 			"patterns": [
 				{
-					"match": "^enable secret",
-					"name": "keyword.control.auth.enable-secret"
+					"match": "(?i)^(enable (?:secret|password))( [0-9] )?(.*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.auth.enable"
+						},
+						"2": {
+							"name": "keyword.key.type"
+						},
+						"3": {
+							"name": "string.key"
+						}
+					}
 				}
 			]
 		},
