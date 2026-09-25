@@ -754,26 +754,48 @@
 		"username": {
 			"patterns": [
 				{
-					"match": "^(?i)(username)\\s+([a-z0-9\\-_]+)",
+					"match": "^(?i)(username) ([a-z0-9\\-_]+) (?:privilege)( (?:[0-9]|1[0-5]) )?(?:password|secret)( [0-9] )?(.+)",
 					"captures": {
 						"1": {
 							"name": "keyword.control.auth.username"
 						},
 						"2": {
-							"name": "variable.auth.username"
+							"name": "entity.name.type.username"
+						},
+						"3": {
+							"name": "keyword.privilege.type"
+						},
+						"4": {
+							"name": "keyword.key.type"
+						},
+						"5": {
+							"name": "string.key"
 						}
 					}
 				},
 				{
-					"match": "^username",
-					"name": "keyword.control.auth.username"
+					"match": "^(?i)(username) ([a-z0-9\\-_]+) (?:password|secret)( [0-9] )?(.*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.auth.username"
+						},
+						"2": {
+							"name": "entity.name.type.username"
+						},
+						"3": {
+							"name": "keyword.key.type"
+						},
+						"4": {
+							"name": "string.key"
+						}
+					}
 				}
 			]
 		},
 		"enable": {
 			"patterns": [
 				{
-					"match": "(?i)^(enable (?:secret|password))( [0-9] )?(.*)",
+					"match": "(?i)^(enable (?:secret|password))( [0-9] )?(.+)",
 					"captures": {
 						"1": {
 							"name": "keyword.control.auth.enable"
