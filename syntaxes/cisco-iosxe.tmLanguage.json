@@ -120,6 +120,9 @@
 				},
 				{
 					"include": "#template"
+				},
+				{
+					"include": "#key"
 				}
 			]
 		},
@@ -215,6 +218,10 @@
 						}
 					}
 					
+				},
+				{
+					"match": "(https|http|ftp)://.+",
+					"name": "string.url"
 				}
 			]
 		},
@@ -519,19 +526,19 @@
 		"router": {
 			"patterns": [
 				{
-					"match": "^(?i)(router)\\s+(ospf|eigrp|rip|bgp)\\s+([0-9a-z_]+)\\s+($|vrf ([a-z0-9_]+))",
+					"match": "^(?i)(router)\\s+(?:ospf|isis|eigrp|rip|bgp)\\s+([0-9a-z_]+)\\s+($|vrf ([a-z0-9_]+))",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.router.cisco"
+							"name": "keyword.control.router"
+						},
+						"2": {
+							"name": "entity.name.type.router-name"
 						},
 						"3": {
-							"name": "variable.router.autonomous-system"
-						},
-						"4": {
 							"name": "keyword.control.router-vrf"
 						},
-						"5": {
-							"name": "entity.name.type.context.vrf.name"
+						"4": {
+							"name": "entity.name.type.vrf.name"
 						}
 					}
 				},
@@ -861,7 +868,7 @@
 		"crypto": {
 			"patterns": [
 				{
-					"match": "^(crypto key generate) rsa modulus ([0-9]+) (label (.*))?$",
+					"match": "^(crypto key generate) rsa modulus ([0-9]+)(?:$|\\s+label (.+))",
 					"captures": {
 						"1": {
 							"name": "keyword.control.crypto-key-generate.cisco"
@@ -869,8 +876,49 @@
 						"2": {
 							"name": "variable.modulus-size.cisco"
 						},
-						"4": {
-							"name": "variable.crypto-key-label"
+						"3": {
+							"name": "entity.name.type.crypto-key-label"
+						}
+					}
+				},
+				{
+					"match": "(?i)^(crypto isakmp) policy ([0-9]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.crypto-isakmp"
+						},
+						"2": {
+							"name": "entity.name.type.crypto-isakmp.policy"
+						}
+					}
+				},
+				{
+					"match": "^(crypto isakmp)",
+					"name": "keyword.control.crypto-isakmp"
+				},
+				{
+					"match": "^(crypto keyring)",
+					"name": "keyword.control.crypto-keyring"
+				},
+				{
+					"match": "(?i)^(crypto ikev2) (?:keyring|profile) (.+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.crypto-ikev2"
+						},
+						"2": {
+							"name": "entity.name.type.crypto-ikev2"
+						}
+					}
+				}, 
+				{
+					"match": "(?i)^(crypto pki) trustpoint (.+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.crypto-pki"
+						},
+						"2": {
+							"name": "entity.name.type.crypto-pki"
 						}
 					}
 				}
@@ -989,6 +1037,29 @@
 						},
 						"2": {
 							"name": "variable.template.name"
+						}
+					}
+				}
+			]
+		},
+		"key": {
+			"patterns": [
+				{
+					"match": "(?i)^(key chain) ([a-z0-9-_]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.key-chain"
+						},
+						"2": {
+							"name": "entity.name.type.key-chain"
+						}
+					}
+				},
+				{
+					"match": "(?i)(key-string) (.+)",
+					"captures": {
+						"2": {
+							"name": "string.key-string"
 						}
 					}
 				}

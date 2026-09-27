@@ -7,8 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ## Added
+- v0.2.5 Added highlighting for URLs. 
+- v0.2.5 Added highlighting for crypto isakmp and ikev2 commands.
+- v0.2.5 Added highlighting for key chains.
 - v0.2.5 Added highlighting for username keys.
 - v0.2.5 Added highlighting for enable secret keys.
+
+## Changed
+- v0.2.5 Changed highlighting of crypto key labels.
+
+## Fixed
+- v0.2.5 Fixed issue where crypto key configs without labels would not highlight.
 
 
 ## 0.2.4 - 2026-09-13
