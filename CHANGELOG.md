@@ -123,5 +123,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Coverage is incomplete and focuses on canonical command forms plus selected common abbreviations.
 - The extension provides syntax highlighting only; it does not validate configuration correctness.
-- Jinja2 support is currently limited to full-line comments.
 
