@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Fixed
 - v0.2.6 Fixed misconfiguration causing configure terminal commands to not highlight properly.
+- v0.2.6 Fixed issue where copy commands would not highlight.
 
 ## 0.2.5 2026-09-27
 

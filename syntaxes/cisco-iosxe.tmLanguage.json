@@ -211,8 +211,15 @@
 				},
 
 				{
-					"match": "^(copy)",
-					"name": "keyword.copy"
+					"match": "(?i)^(copy) ([a-z]+ [a-z]+)?",
+					"captures": {
+						"1": {
+							"name": "keyword.copy"
+						},
+						"2": {
+							"name": "string.copy.source.destination"
+						}
+					}
 				},
 				{
 					"match": "^end",
