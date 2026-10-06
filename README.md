@@ -1,4 +1,4 @@
-# Cisco IOS-XE Syntax Highlighting (Pre-Release `v0.2.4`)
+# Cisco IOS-XE Syntax Highlighting (Pre-Release)
 
 Syntax highlighting for Cisco IOS and IOS XE configuration files in Visual Studio Code.
 
@@ -75,7 +75,6 @@ For other filenames, add a VS Code file association:
 - Syntax coverage is incomplete and will grow incrementally.
 - The grammar is a highlighter, not a parser, linter, formatter, or configuration validator.
 - Most noncanonical command abbreviations are not recognized.
-- Jinja2 support is limited.
 - Some commands are context-sensitive in IOS but may be highlighted more broadly by this grammar.
 
 ## Feedback and contributions
