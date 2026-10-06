@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## Changed
+- v0.2.6 Changed highlighting of tacacs server commands.
+- v0.2.6 Changed highlighting of aaa group server commands.
+- v0.2.6 Changed highlighting of radius server commands.
+- v0.2.6 Changed highlighting of aaa authentication|authorization|accounting commands.
+
 ## Fixed
 - v0.2.6 Fixed misconfiguration causing configure terminal commands to not highlight properly.
 

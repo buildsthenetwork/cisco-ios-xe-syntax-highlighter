@@ -253,18 +253,18 @@
 							"name": "keyword.control.auth.aaa"
 						},
 						"2": {
-							"name": "variable.auth.aaa.group-name"
+							"name": "entity.name.type.auth.aaa.group"
 						}
 					}
 				},
 				{
-					"match": "^(?i)(aaa group server)\\s+(radius|tacacs\\+)\\s([0-9a-z\\-_]+)",
+					"match": "^(?i)(aaa group server)\\s+(?:radius|tacacs\\+)\\s([0-9a-z\\-_]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.aaa.server"
+							"name": "keyword.control.aaa.server"
 						},
-						"3": {
-							"name": "variable.aaa.server.name"
+						"2": {
+							"name": "entity.name.type.aaa.server"
 						}
 					}
 				},
@@ -292,10 +292,10 @@
 					"match": "^(?i)(radius server) ([a-z0-9-_]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.aaa.radius"
+							"name": "keyword.control.aaa.radius"
 						},
 						"2": {
-							"name": "variable.aaa.server.name"
+							"name": "entity.name.type.aaa.radius"
 						}
 					}
 				}
@@ -307,10 +307,10 @@
 					"match": "^(?i)(tacacs\\s+server) ([a-z0-9-_]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.aaa.tacacs"
+							"name": "keyword.control.tacacs.server"
 						},
 						"2": {
-							"name": "variable.aaa.server.name"
+							"name": "entity.name.type.tacacs.server"
 						}
 					}
 				},
