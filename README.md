@@ -12,7 +12,7 @@ This extension is built around practical configuration review: important structu
 - Distinguishes interfaces, IP addresses, VLANs, routing processes, ACLs, AAA servers, and other frequently reviewed values.
 - Makes operationally significant keywords stand out.
 - Highlights Cisco `!` comment lines.
-- Highlights full-line Jinja2 comments (`{# ... #}`) commonly used in Ansible templates.
+- Highlights full-line Jinja2 syntax commonly used in Ansible templates.
 - Supports `.ios`, `.iosxe`, `.cisco`, `iosj2`, `iosxej2`, and `.ciscoj2` files.
 
 Highlighting colors are provided by your active VS Code theme. Because themes assign colors differently, the exact appearance may vary.
