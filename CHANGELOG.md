@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - v0.2.6 Changed highlighting of aaa group server commands.
 - v0.2.6 Changed highlighting of radius server commands.
 - v0.2.6 Changed highlighting of aaa authentication|authorization|accounting commands.
+- v0.2.6 Changed highlighting of standard and extended access-lists.
 
 ## Fixed
 - v0.2.6 Fixed misconfiguration causing configure terminal commands to not highlight properly.
