@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## Fixed
+- v0.2.6 Fixed misconfiguration causing configure terminal commands to not highlight properly.
+
+## 0.2.5 2026-09-27
+
 ## Added
 - v0.2.5 Added highlighting for URLs. 
 - v0.2.5 Added highlighting for crypto isakmp and ikev2 commands.

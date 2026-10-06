@@ -192,9 +192,24 @@
 					"name": "constant.numeric.ip-address"
 				},
 				{
-					"match": "^(configure|conf) (confirm|conf|terminal|term|t)",
+					"match": "^(configure|config|conf) (terminal|term|t) (?:revert timer) ([0-9]+)",
+					"captures": {
+						"1": {
+							"name": "keyword.configure"
+						}, 
+						"2": {
+							"name": "keyword.configure"
+						},
+						"3": {
+							"name": "string.configure.timer"
+						}
+					}
+				},
+				{
+					"match": "^(configure|config|conf) (confirm|conf|terminal|term|t)",
 					"name": "keyword.configure"
 				},
+
 				{
 					"match": "^(copy)",
 					"name": "keyword.copy"
