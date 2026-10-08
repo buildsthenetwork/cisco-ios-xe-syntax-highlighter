@@ -6,135 +6,153 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-## Added
-- Added highlighting for default keyword.
-- Added highlighting for flow record|exporter|monitor names.
-
-## Changed
-- Changed highlighting of tacacs server commands.
-- Changed highlighting of aaa group server commands.
-- Changed highlighting of radius server commands.
-- Changed highlighting of aaa authentication|authorization|accounting commands.
-- Changed highlighting of standard and extended access-lists.
-- Changed highlighting of class-maps.
-- Changed highlighting of policy-maps.
-- Changed highlighting for numbered access-lists.
-- Changed highlighting for device-sensor.
-- Changed highlighting for access-session commands.
-- Changed highlighting for device-tracking commands.
-- Changed highlighting for interface templates.
-- Changed highlighting for NetFlow.
-- Changed highlighting for control-plane.
-- Changed highlighting for archive.
-- Changed highlighting for IP SLA.
-- Changed highlighting for ip dhcp pool.
-
-## Fixed
-- Fixed misconfiguration causing configure terminal commands to not highlight properly.
-- Fixed issue where copy commands would not highlight.
-
-## 0.2.5 2026-09-27
-
-## Added
-- v0.2.5 Added highlighting for URLs. 
-- v0.2.5 Added highlighting for crypto isakmp and ikev2 commands.
-- v0.2.5 Added highlighting for key chains.
-- v0.2.5 Added highlighting for username keys.
-- v0.2.5 Added highlighting for enable secret keys.
-
-## Changed
-- v0.2.5 Changed highlighting of crypto key labels.
-
-## Fixed
-- v0.2.5 Fixed issue where crypto key configs without labels would not highlight.
-
-
-## 0.2.4 - 2026-09-13
-
-## Added
-- v0.2.4 Added highlighting for ip version in any command.
-- v0.2.4 Added highlighting for vrf usage in router ospf.
-- v0.2.4 Added highlighting for vrf usage in router eigrp.
-
-## Changed
-- v0.2.4 Changed VRF command highlighting.
-- v0.2.4 Changed ip route vrf command highlighting.
-- v0.2.4 Changed interface highlighting rules.
-
-## Fixed
-- v0.2.4 Fixed bug causing ip tacacs commands to not highlight properly.
-- v0.2.4 Fixed bug causing some router eigrp commands to not highlight.
-- v0.2.4 Fixed issue where 25G interfaces would not highlight.
-
-## 0.2.3 - 2026-08-17
-
 ### Added
- - v0.2.3 Added highlighting rules for various ip commands.
- - v0.2.3 Added highlighting for various logging commands.
- - v0.2.3 Added highlighting for crypto key labels.
+
+- Added highlighting for the `default` keyword.
+- Added highlighting for `flow record`, `flow exporter`, and `flow monitor` names.
 
 ### Changed
- - v0.2.3 Changed highlighting rules for physical interfaces.
- - v0.2.3 Changed highlighting for storage commands to include highlighting the directory.
- - v0.2.3 Changed highlighting rules for negation (no, shut, shutdown)
+
+- Changed highlighting for `tacacs server` commands.
+- Changed highlighting for `aaa group server` commands.
+- Changed highlighting for `radius server` commands.
+- Changed highlighting for `aaa authentication`, `aaa authorization`, and `aaa accounting` commands.
+- Changed highlighting for standard and extended access lists.
+- Changed highlighting for class maps.
+- Changed highlighting for policy maps.
+- Changed highlighting for numbered access lists.
+- Changed highlighting for `device-sensor` commands.
+- Changed highlighting for `access-session` commands.
+- Changed highlighting for `device-tracking` commands.
+- Changed highlighting for interface templates.
+- Changed highlighting for NetFlow.
+- Changed highlighting for `control-plane` commands.
+- Changed highlighting for `archive` commands.
+- Changed highlighting for IP SLA.
+- Changed highlighting for `ip dhcp pool` commands.
 
 ### Fixed
- - v0.2.3 Fixed bug causing physical interfaces to not highlight under certain conditions.
- - v0.2.3 Fixed bug causing some interfaces ranges to not highlight properly.
- - v0.2.3 Fixed bug causing subinterfaces to not highlight properly.
+
+- Fixed incorrect highlighting for `configure terminal` commands.
+- Fixed missing highlighting for `copy` commands.
+
+## [0.2.5] - 2026-09-27
+
+### Added
+
+- Added highlighting for URLs.
+- Added highlighting for `crypto isakmp` and `crypto ikev2` commands.
+- Added highlighting for key chains.
+- Added highlighting for keys in `username` commands.
+- Added highlighting for keys in `enable secret` commands.
+
+### Changed
+
+- Changed highlighting of crypto key labels.
+
+### Fixed
+
+- Fixed missing highlighting for crypto key configurations without labels.
+
+## [0.2.4] - 2026-09-13
+
+### Added
+
+- Added highlighting for IP version keywords in any command.
+- Added highlighting for VRF usage in `router ospf` commands.
+- Added highlighting for VRF usage in `router eigrp` commands.
+
+### Changed
+
+- Changed VRF command highlighting.
+- Changed highlighting for `ip route vrf` commands.
+- Changed interface highlighting rules.
+
+### Fixed
+
+- Fixed incorrect highlighting for `ip tacacs` commands.
+- Fixed missing highlighting for some `router eigrp` commands.
+- Fixed issue where 25G interfaces would not highlight.
+
+## [0.2.3] - 2026-08-17
+
+### Added
+
+- Added highlighting rules for various IP commands.
+- Added highlighting for various logging commands.
+- Added highlighting for crypto key labels.
+
+### Changed
+
+- Changed highlighting rules for physical interfaces.
+- Changed highlighting for storage commands to include highlighting the directory.
+- Changed highlighting rules for negation (`no`, `shut`, and `shutdown`).
+
+### Fixed
+
+- Fixed bug causing physical interfaces to not highlight under certain conditions.
+- Fixed incorrect highlighting for some interface ranges.
+- Fixed bug causing subinterfaces to not highlight properly.
 
 ## [0.2.2] - 2026-07-20
 
 ### Added
- - v0.2.2 Added highlighting rule for storage commands.
- - v0.2.2 Added highlighting rule for interface ACL access-groups.
- - v0.2.2 Added highlighting rule for interface netflow monitor.
- - v0.2.2 Added highlighting rule for interface channel-groups.
- - v0.2.2 Added highlighting rule to capture CIDR notation at the end of IP addresses.
+
+- Added highlighting rule for storage commands.
+- Added highlighting rule for interface ACL access-groups.
+- Added highlighting for interface NetFlow monitors.
+- Added highlighting rule for interface channel-groups.
+- Added highlighting rule to capture CIDR notation at the end of IP addresses.
 
 ### Fixed
- - v0.2.2 Fixed bug causing interface ranges to not highlight properly.
- - v0.2.2 Fixed bug causing configure terminal and configure confirm to not highlight properly.
+
+- Fixed bug causing interface ranges to not highlight properly.
+- Fixed incorrect highlighting for `configure terminal` and `configure confirm` commands.
 
 ### Changed
- - v0.2.2 Changed highlighting rule for vlans to highlight vlan IDs, and include vlan ranges. (i.e. vlan 10,20-25,30 now highlights the IDs, including the range)
+
+- Changed VLAN highlighting to include IDs and ranges, such as `vlan 10,20-25,30`.
 
 ## [0.2.1] - 2026-07-20
 
 ### Added
-- v0.2.1 Added highlighting for jinja2 variables.
-- v0.2.1 Added highlighting for jinja2 loops and conditionals.
-- v0.2.1 Added highlighting for errdisable recovery.
-- v0.2.1 Added highlighting for device-sensor.
-- v0.2.1 Added highlighting for device-tracker.
-- v0.2.1 Added highlighting for access-session.
-- v0.2.1 Added highlighting for aaa server.
-- v0.2.1 Added highlighting for copy.
-- v0.2.1 Added highlighting for write memory.
-- v0.2.1 Added highlighting for configure commands.
+
+- Added highlighting for Jinja2 variables.
+- Added highlighting for Jinja2 loops and conditionals.
+- Added highlighting for `errdisable recovery` commands.
+- Added highlighting for `device-sensor` commands.
+- Added highlighting for device tracking.
+- Added highlighting for `access-session` commands.
+- Added highlighting for `aaa server` commands.
+- Added highlighting for `copy` commands.
+- Added highlighting for `write memory` commands.
+- Added highlighting for `configure` commands.
 
 ### Fixed
-- v0.2.1 Removed highlighting of vlan-id from vlan context.
-- v0.2.1 Fixed username patterns that were not being caught.
-- v0.2.1 Fixed bug where some aaa commands wouldn't highlight.
-- v0.2.1 Fixed highlighting for hostnames where jinja2 was present.
-- v0.2.1 Fixed bug where jinja2 would be highlighted when preceded by description.
+
+- Removed highlighting of `vlan-id` from the VLAN context.
+- Fixed username patterns that were not being caught.
+- Fixed missing highlighting for some AAA commands.
+- Fixed hostname highlighting when Jinja2 syntax is present.
+- Fixed incorrect Jinja2 highlighting following `description`.
 
 ## [0.2.0] - 2026-07-20
 
 ### Fixed
-- v0.2.0 Refactored internal matching schemas.
+
+- Refactored internal matching schemas.
 
 ## [0.1.1] - 2026-07-19
 
 ### Added
-- v0.1.1 Added rules for highlighting policy-map names.
-- v0.1.1 Added rules for highlighting class-maps.
-- v0.1.1 Added rules for highlighting service-templates.
 
+- Added rules for highlighting policy-map names.
+- Added rules for highlighting class-maps.
+- Added rules for highlighting service-templates.
 
 ### Fixed
-- v0.1.1 Removed highlighting from remark keyword to only highlight text.
+
+- Changed `remark` highlighting to apply only to the remark text.
 
 ## [0.1.0] - 2026-07-18
 
@@ -152,4 +170,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Coverage is incomplete and focuses on canonical command forms plus selected common abbreviations.
 - The extension provides syntax highlighting only; it does not validate configuration correctness.
-
