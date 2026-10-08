@@ -7,15 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ## Changed
-- v0.2.6 Changed highlighting of tacacs server commands.
-- v0.2.6 Changed highlighting of aaa group server commands.
-- v0.2.6 Changed highlighting of radius server commands.
-- v0.2.6 Changed highlighting of aaa authentication|authorization|accounting commands.
-- v0.2.6 Changed highlighting of standard and extended access-lists.
+- Changed highlighting of tacacs server commands.
+- Changed highlighting of aaa group server commands.
+- Changed highlighting of radius server commands.
+- Changed highlighting of aaa authentication|authorization|accounting commands.
+- Changed highlighting of standard and extended access-lists.
+- Changed highlighting of class-maps.
+- Changed highlighting of policy-maps.
+
 
 ## Fixed
-- v0.2.6 Fixed misconfiguration causing configure terminal commands to not highlight properly.
-- v0.2.6 Fixed issue where copy commands would not highlight.
+- Fixed misconfiguration causing configure terminal commands to not highlight properly.
+- Fixed issue where copy commands would not highlight.
 
 ## 0.2.5 2026-09-27
 

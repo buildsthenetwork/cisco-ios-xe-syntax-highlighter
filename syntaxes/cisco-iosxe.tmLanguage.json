@@ -598,50 +598,30 @@
 		"policy-map": {
 			"patterns": [
 				{
-					"match": "^(policy-map)\\s+(type control subscriber)\\s+(.*)\\b",
+					"match": "^(policy-map)(?:\\s+type control subscriber)?\\s+(.*)\\b",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.policy-map.cisco"
-						},
-						"3": {
-							"name": "variable.policy-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(policy-map)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.context.policy-map.cisco"
+							"name": "keyword.control.policy-map"
 						},
 						"2": {
-							"name": "variable.policy-map.name"
+							"name": "entity.name.type.policy-map"
 						}
 					}
 				}
+			
+
 			]
 		},
 		"class-map": {
 			"patterns": [
 				{
-					"match": "^(class-map)\\s+(match-all|match-any)\\s+(.*)\\b",
+					"match": "^(class-map)(?:\\s+type control subscriber)?\\s+(?:match-all|match-any)\\s+(.*)\\b",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.class-map"
+							"name": "keyword.control.class-map"
 						},
-						"3": {
-							"name": "variable.class-map.name"
-						}
-					}
-				},
-				{
-					"match": "^(class-map)\\s+(type control subscriber)\\s+(match-all|match-any)\\s+(.*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.context.class-map"
-						},
-						"4": {
-							"name": "variable.class-map.name"
+						"2": {
+							"name": "entity.name.type.class-map"
 						}
 					}
 				}
