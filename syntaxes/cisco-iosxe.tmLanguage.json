@@ -165,12 +165,16 @@
 					"name": "variable.permit"
 				},
 				{
-					"match": "(remark)\\s+(.*)$",
+					"match": "(?:remark)\\s+(.*)$",
 					"captures": {
-						"2": {
+						"1": {
 							"name": "string.unquoted.acl.remark"
 						}
 					}
+				},
+				{
+					"match": "^default",
+					"name": "keyword.default"
 				},
 				{
 					"match": "(?i)^\\s*(no|shutdown|shut)\\b",
@@ -333,10 +337,10 @@
 					"match": "^(?i)(access-list)\\s+([0-9]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.access-list"
+							"name": "keyword.control.access-list"
 						},
 						"2": {
-							"name": "variable.acl.number"
+							"name": "entity.name.type.access-list"
 						}
 					}
 				}
@@ -430,13 +434,13 @@
 					"name": "keyword.control.type.forward-protocol"
 				},
 				{
-					"match": "(ip dhcp pool)(.*)",
+					"match": "^(ip dhcp pool)(.*)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.ip-dhcp-pool"
+							"name": "keyword.control.ip.dhcp-pool"
 						},
 						"2": {
-							"name": "variable.ip-dhcp-pool"
+							"name": "entity.name.type.ip.dhcp-pool"
 						}
 					}
 				},
@@ -522,24 +526,13 @@
 		"ip-sla": {
 			"patterns": [
 				{
-					"match": "(ip sla) ([0-9]{1,4})",
-					"captures": {
-						"1": {
-							"name": "entity.name.type.ip-sla"
-						},
-						"2": {
-							"name": "variable.ip-sla"
-						}
-					}
-				},
-				{
-					"match": "(ip sla) schedule ([0-9]{1,4})",
+					"match": "(ip sla)(?: schedule)? ([0-9]{1,4})",
 					"captures": {
 						"1": {
 							"name": "keyword.control.ip-sla"
 						},
 						"2": {
-							"name": "variable.ip-sla"
+							"name": "entity.name.type.ip-sla"
 						}
 					}
 				}
@@ -715,8 +708,15 @@
 		"flow": {
 			"patterns": [
 				{
-					"match": "^flow (record|exporter|monitor)",
-					"name": "entity.name.type.context.netflow.cisco"
+					"match": "(?i)^(flow (?:record|exporter|monitor)) (.*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.flow"
+						},
+						"2": {
+							"name": "entity.name.type.flow"
+						}
+					}
 				}
 			]
 		},
@@ -724,7 +724,7 @@
 			"patterns": [
 				{
 					"match": "^line (con|vty|aux)",
-					"name": "entity.name.type.context.lines.cisco"
+					"name": "keyword.control.line"
 				}
 			]
 		},
@@ -732,7 +732,7 @@
 			"patterns": [
 				{
 					"match": "^control-plane",
-					"name": "entity.name.type.context.control-plane.cisco"
+					"name": "keyword.control.control-plane"
 				}
 			]
 		},
@@ -748,7 +748,7 @@
 			"patterns": [
 				{
 					"match": "^archive",
-					"name": "entity.name.type.context.archive.cisco"
+					"name": "keyword.control.archive"
 				}
 			]
 		},
@@ -961,13 +961,13 @@
 		"device-sensor": {
 			"patterns": [
 				{
-					"match": "^(?i)(device-sensor)(.*list\\s+)([a-z0-9\\-_]+)",
+					"match": "^(?i)(device-sensor)(?:.*list\\s+)([a-z0-9\\-_]+)",
 					"captures": {
 						"1": {
 							"name": "keyword.control.device-sensor"
 						},
-						"3": {
-							"name": "variable.filter-list.name"
+						"2": {
+							"name": "entity.name.type.device-sensor.filter"
 						}
 					}
 				},
@@ -980,32 +980,28 @@
 		"access-session": {
 			"patterns": [
 				{
-					"match": "^(?i)(access-session\\s+attributes)(.*list\\s+)([a-z0-9\\-_]+)",
+					"match": "^(?i)(access-session(?: authentication| accounting)? attributes)(?:.*list\\s+)([a-z0-9\\-_]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.access-session-atttributes"
+							"name": "keyword.control.access-session"
 						},
-						"3": {
-							"name": "variable.access-session-attributes.list-name"
+						"2": {
+							"name": "entity.name.type.access-session.attributes"
 						}
 					}
-				},
-				{
-					"match": "^(?i)(access-session)\\s(authentication|accounting)",
-					"name": "keyword.control.access-session"
 				}
 			]
 		},
 		"device-tracking": {
 			"patterns": [
 				{
-					"match": "^(?i)(device-tracking)\\s+(policy)\\s+([a-z0-9\\-_]+)",
+					"match": "^(?i)(device-tracking) policy ([a-z0-9\\-_]+)",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.device-tracking-policy"
+							"name": "keyword.control.device-tracking"
 						},
-						"3": {
-							"name": "variable.device-tracking-policy.name"
+						"2": {
+							"name": "entity.name.type.device-tracking"
 						}
 					}
 				}
@@ -1035,10 +1031,10 @@
 					"match": "^(template)\\s+(.*)\\b",
 					"captures": {
 						"1": {
-							"name": "entity.name.type.context.template"
+							"name": "keyword.control.template"
 						},
 						"2": {
-							"name": "variable.template.name"
+							"name": "entity.name.type.template"
 						}
 					}
 				}

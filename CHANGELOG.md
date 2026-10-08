@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## Added
+- Added highlighting for default keyword.
+- Added highlighting for flow record|exporter|monitor names.
+
 ## Changed
 - Changed highlighting of tacacs server commands.
 - Changed highlighting of aaa group server commands.
@@ -14,7 +18,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Changed highlighting of standard and extended access-lists.
 - Changed highlighting of class-maps.
 - Changed highlighting of policy-maps.
-
+- Changed highlighting for numbered access-lists.
+- Changed highlighting for device-sensor.
+- Changed highlighting for access-session commands.
+- Changed highlighting for device-tracking commands.
+- Changed highlighting for interface templates.
+- Changed highlighting for NetFlow.
+- Changed highlighting for control-plane.
+- Changed highlighting for archive.
+- Changed highlighting for IP SLA.
+- Changed highlighting for ip dhcp pool.
 
 ## Fixed
 - Fixed misconfiguration causing configure terminal commands to not highlight properly.
