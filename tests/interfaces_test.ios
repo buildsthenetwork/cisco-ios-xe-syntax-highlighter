@@ -377,3 +377,8 @@ interface TwentyFiveGigE1/0/1.200
  vrf forwarding CORP
  ip address 10.200.0.1 255.255.255.0
 !
+default interface TwentyFiveGigE1/0/1.200
+ encapsulation dot1Q 200
+ vrf forwarding CORP
+ ip address 10.200.0.1 255.255.255.0
+!

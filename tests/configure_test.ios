@@ -7,3 +7,14 @@ conf t
 configure confirm
 configure conf
 conf conf
+configure terminal revert timer 10
+configure term revert timer 10
+configure t revert timer 10
+config terminal
+config terminal revert timer 10
+config term
+config term revert timer 10
+config t
+config t revert timer 10
+conf t revert timer 10
+
