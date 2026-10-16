@@ -1017,7 +1017,7 @@
 		"description": {
 			"patterns": [
 				{
-					"begin": "^\\s+(?i)(description)\\s+",
+					"begin": "^\\s+(?i)(description|desc)\\s+",
 	
 					"end": "$",
 					"patterns": [
